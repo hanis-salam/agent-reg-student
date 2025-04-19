@@ -1,0 +1,270 @@
+<!-- HEADER SECTION -->
+<div>
+    <h2>Student Registration Form</h2>
+    <h5>Universiti Malaysia Perlis (UniMAP) - UniMAP@KL Campus</h5>
+</div>
+
+<!-- INFO NOTICE -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Undergraduate Form Application</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Please fill out this form accurately to avoid application failure.</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN FORM -->
+<form role="form" class="row">
+
+    <!-- PERSONAL INFO -->
+    <div class="col-md-6">
+        <p class="help-block">PERSONAL INFORMATION</p>
+
+        <div>
+            <label class="form-label">Full name (as per IC/Passport)</label><br />
+            <input type="text" class="form-control">
+        </div>
+
+        <div>
+            <label class="form-label">IC Number</label><br />
+            <input type="number" class="form-control">
+        </div>
+
+        <div>
+            <label>Gender</label>
+            <div class="radio">
+                <label><input type="radio" name="gender" value="Male" checked /> Male</label>
+                <label><input type="radio" name="gender" value="Female" /> Female</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" id="birthday" name="birthday">
+        </div>
+
+        <div>
+            <label class="form-label">Place of Birth</label><br />
+            <input type="text" class="form-control">
+        </div>
+
+        <div>
+            <label>Nationality</label>
+            <div class="radio">
+                <label><input type="radio" name="citizen" value="Citizen" /> Citizen</label>
+                <label><input type="radio" name="citizen" value="Non Citizen" /> Non Citizen</label>
+            </div>
+        </div>
+
+        <div>
+            <label>Select Race</label>
+            <select name="race" id="race">
+                <option value="Malay">Malay</option>
+                <option value="China">China</option>
+                <option value="India">India</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Select Religion</label>
+            <select name="religion" id="religion">
+                <option value="Islam">Islam</option>
+                <option value="Hindu">Hindu</option>
+                <option value="Buddha">Buddha</option>
+                <option value="Christian">Christian</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="form-label">Contact number</label><br />
+            <input type="text" class="form-control">
+            <small><i>State your country code: Example (+60 12 3456789)</i></small>
+        </div>
+
+        <!-- ADDRESS -->
+        <p class="help-block">ADDRESS INFORMATION</p>
+
+        <div>
+            <label class="form-label">Permanent Address</label><br />
+            <input type="text" class="form-control">
+        </div>
+
+        <div>
+            <label class="form-label">City</label><br />
+            <input type="text" class="form-control">
+        </div>
+
+        <div>
+            <label class="form-label">Postal Code</label><br />
+            <input type="text" class="form-control">
+        </div>
+
+        <!-- EMERGENCY DETAILS -->
+        <p class="help-block">EMERGENCY DETAILS</p>
+
+        <div>
+            <label class="form-label">Name</label><br />
+            <input type="text" class="form-control">
+        </div>
+
+        <div>
+            <label class="form-label">Contact No.</label><br />
+            <input type="text" class="form-control">
+        </div>
+
+        <!-- PROGRAM INFO -->
+        <p class="help-block">PROGRAM INFORMATION</p>
+
+        <div>
+            <label>Passport Photo</label>
+            <input type="file" />
+        </div>
+
+        <div>
+            <label>Status Candidate</label>
+            <select name="candidate">
+                <option value="local">Local Student</option>
+                <option value="international">International Student</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Status Program</label>
+            <input class="form-control" type="text" placeholder="Degree" disabled />
+        </div>
+
+        <div>
+            <label>Program</label><br />
+            <select name="program" id="program">
+                <option value="bib">Bachelor of Business (HONS) International Business</option>
+                <option value="saab">Bachelor of Business (HONS) Engineering Entrepreneurship</option>
+                <option value="opel">Bachelor of New Media Communications (HONS)</option>
+                <option value="audi">Bachelor of Computer Engineering (HONS)</option>
+            </select>
+        </div>
+
+        <div>
+            <p class="help-block">Mode of Study</p>
+            <label>Full Time</label><input type="radio" name="study_mode" value="full_time" />
+            <label>Part Time</label><input type="radio" name="study_mode" value="part_time" />
+        </div>
+
+        <div>
+            <p class="help-block">Intake Year</p>
+            <label>March</label><input type="radio" name="intake" value="March" />
+            <label>October</label><input type="radio" name="intake" value="October" />
+
+            <label>Year</label>
+            <select name="year">
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
+            </select>
+        </div>
+
+        <!-- ACADEMIC QUALIFICATION -->
+        <p class="help-block">ACADEMIC QUALIFICATION</p>
+
+        <div>
+            <label>Academic Qualification</label><br />
+            <input class="form-control" /><br />
+            <label>Institution Name</label><br />
+            <input class="form-control" /><br />
+            <label>Country of Institution</label><br />
+            <input class="form-control" /><br />
+            <label>Year of Graduation</label><br />
+            <input class="form-control" /><br />
+            <label>Certificate of Study</label><br />
+            <input type="file" /><br />
+            <label>Transcript</label><br />
+            <input type="file" /><br />
+        </div>
+
+        <!-- PREVIOUS EDUCATION -->
+        <p class="help-block">PREVIOUS EDUCATION</p>
+
+        <div>
+            <label>Name of Secondary School</label><br />
+            <input class="form-control" /><br />
+            <label>Address</label><br />
+            <input class="form-control" /><br />
+            <label>Qualification Obtained</label><br />
+            <input class="form-control" /><br />
+            <label>Result</label><br />
+            <input type="file" /><br />
+            <label>Letter of Completion</label><br />
+            <input type="file" /><br />
+        </div>
+
+        <!-- ENGLISH PROFICIENCY -->
+        <p class="help-block">ENGLISH PROFICIENCY</p>
+
+        <div>
+            <label>Type of English Test</label><br />
+            <label>TOEFL</label><input type="radio" name="eng_test" />
+            <label>IELTS</label><input type="radio" name="eng_test" />
+            <label>MUET</label><input type="radio" name="eng_test" />
+            <label>Other (Specify)</label><input type="text" /><br />
+
+            <label>Score</label><br />
+            <input class="form-control" /><br />
+            <label>Test Date</label><br />
+            <input class="form-control" /><br />
+            <label>Result</label><br />
+            <input type="file" /><br />
+        </div>
+
+        <!-- VISA INFO -->
+        <p class="help-block">VISA INFORMATION (INTERNATIONAL STUDENTS)</p>
+
+        <div>
+            <label>Require Student Visa?</label><br />
+            <label>Yes</label><input type="radio" name="visa_req" />
+            <label>No</label><input type="radio" name="visa_req" /><br />
+
+            <label>Type of Visa</label><br />
+            <label class="checkbox-inline"><input type="checkbox" /> Student Visa</label>
+            <label class="checkbox-inline"><input type="checkbox" /> Dependent Visa</label><br />
+
+            <label>Visa Expiry Date</label>
+            <input type="date" name="expiryvisadate" />
+
+            <label>Passport Expiry Date</label><br />
+            <input type="date" name="passportexpirydate" class="form-control" />
+        </div>
+
+        <!-- PARENTS/GUARDIAN INFO -->
+        <p class="help-block">PARENTS/GUARDIANS INFORMATION</p>
+
+        <div>
+            <label>Father's/Guardian Name</label><br />
+            <input class="form-control" /><br />
+            <label>Occupation</label><br />
+            <input class="form-control" /><br />
+            <label>Phone Number</label><br />
+            <input class="form-control" /><br />
+            <label>Mother's/Guardian Name</label><br />
+            <input class="form-control" /><br />
+            <label>Phone Number</label><br />
+            <input class="form-control" />
+        </div>
+
+        <!-- PAYMENT RECEIPT -->
+        <p>Before submitting your application, please pay RM128.00 and upload the receipt below.</p>
+        <label>Payment Receipt</label>
+        <input type="file" />
+    </div>
+
+</form>

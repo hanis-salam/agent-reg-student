@@ -65,8 +65,8 @@
         <ul class="navbar-nav">
           <li class="nav-item">
             <a
-              class="nav-link text-dark sidebar-link"
-              href="../pages/dashboard.html"
+              class="nav-link text-dark active bg-gradient-dark text-white sidebar-link dashboard-link"
+              onclick="loadPage('test', this)"
             >
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text ms-1">Dashboard</span>
@@ -82,8 +82,8 @@
           </li>
           <li class="nav-item">
             <a
-              class="nav-link text-dark sidebar-link"
-              href="../pages/profile.html"
+              class="nav-link text-dark profile-link"
+              onclick="loadPage('profile', this)"
             >
               <i class="material-symbols-rounded opacity-5">person</i>
               <span class="nav-link-text ms-1">Profile</span>
@@ -91,8 +91,8 @@
           </li>
           <li class="nav-item">
             <a
-              class="nav-link text-dark sidebar-link"
-              href="../pages/create-agent.html"
+              class="nav-link text-dark create-agent-link"
+              onclick="loadPage('Applicationform1', this)"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
               <span class="nav-link-text ms-1">Create a new agent</span>
@@ -102,7 +102,10 @@
       </div>
       <div class="sidenav-footer position-absolute w-100 bottom-0">
         <div class="mx-3">
-          <a id="signOutBtn" class="btn bg-gradient-dark w-100" type="button"
+          <a
+            onclick="signout()"
+            class="btn bg-gradient-dark w-100"
+            type="button"
             >Sign Out</a
           >
         </div>
@@ -160,30 +163,51 @@
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
     <script>
-      fetch("../components/test.html")
-        .then((res) => res.text())
-        .then((data) => {
-          document.getElementById("content").innerHTML = data;
-        });
-    </script>
-    <script>
-      // Highlight active sidebar link based on current URL
-      document.addEventListener("DOMContentLoaded", function () {
-        const links = document.querySelectorAll(".sidebar-link");
+      function loadPage(pageName, element) {
+        console.log(pageName);
+        fetch("./" + pageName + ".html")
+          .then((res) => res.text())
+          .then((data) => {
+            document.getElementById("content").innerHTML = data;
+          });
 
-        const currentPage = window.location.pathname.split("/").pop(); // gets "create-agent.html" etc.
+        if (element) {
+          document.querySelectorAll(".nav-link").forEach((el) => {
+            el.classList.remove("active", "bg-gradient-dark", "text-white");
+          });
+        }
 
-        links.forEach((link) => {
-          const linkPage = link.getAttribute("href").split("/").pop();
-          if (linkPage === currentPage) {
-            link.classList.add("active", "bg-gradient-dark", "text-white");
-          } else {
-            link.classList.remove("active", "bg-gradient-dark", "text-white");
-          }
-        });
+        if (pageName === "dahboard") {
+          const secondLink = document.querySelector(".nav-link.dashboard-link");
+          secondLink.classList.add("active", "bg-gradient-dark", "text-white");
+        } else if (pageName === "profile") {
+          const thridLink = document.querySelector(".nav-link.profile-link");
+          thridLink.classList.add("active", "bg-gradient-dark", "text-white");
+        } else if (pageName === "create-agent") {
+          const forthLink = document.querySelector(
+            ".nav-link.create-agent-link"
+          );
+          forthLink.classList.add("active", "bg-gradient-dark", "text-white");
+        } else {
+          const secondLink = document.querySelector(".nav-link.dashboard-link");
+          secondLink.classList.add("active", "bg-gradient-dark", "text-white");
+        }
+      }
+      function signout() {
+        // Clear session
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("role");
+
+        // Optional: redirect to login page
+        window.location.href = "sign-in.html";
+      }
+      window.addEventListener("DOMContentLoaded", () => {
+        const firstLink = document.querySelector(".nav-link.sidebar-link");
+
+        loadPage("test", firstLink);
+
+        firstLink.classList.add("active", "bg-gradient-dark", "text-white");
       });
     </script>
-    <!-- logout -->
-    <script src="../assets/js/db/logout.js"></script>
   </body>
 </html>
