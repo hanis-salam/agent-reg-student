@@ -1,0 +1,621 @@
+<style>
+  body {
+    font-size: 0.85rem;
+  }
+  .form-control {
+    border: 1px solid #9e9e9e !important;
+    box-shadow: none !important;
+    padding: 3px 6px !important;
+    font-size: 0.85rem;
+  }
+  .form-check-input {
+    border-color: #737373 !important;
+    width: 0.9em;
+    height: 0.9em;
+  }
+  .form-check-input:checked {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+  }
+  label,
+  .form-check-label {
+    font-size: 0.85rem;
+  }
+  h4 {
+    font-size: 1rem;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .mb-3 {
+    margin-bottom: 0.5rem !important;
+  }
+  .mt-4 {
+    margin-top: 0.5rem !important;
+  }
+  .card {
+    margin-bottom: 0.75rem !important;
+    padding: 1rem !important;
+  }
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.75rem;
+  }
+</style>
+<form>
+  <div class="card p-4">
+    <!-- 1. Personal Information -->
+    <h4>Personal Information</h4>
+    <div class="row">
+      <!-- Profile Picture -->
+      <div class="mb-3 text-left">
+        <img src="https://via.placeholder.com/150" alt="Profile Picture" class="rounded-circle mb-3 profile-img">
+        <input type="file" class="form-control-file" id="profilePic">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Full Name</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label d-block">Gender</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="gender"
+            value="Male"
+          /><label class="form-check-label">Male</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="gender"
+            value="Female"
+          /><label class="form-check-label">Female</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="gender"
+            value="Other"
+          /><label class="form-check-label">Other</label>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>IC Number / Passport Number</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Date of Birth</label><input type="date" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="nationality">Nationality</label>
+        <select id="nationality" class="form-control">
+            <option value="" disabled selected>Select Nationality</option>
+            <option value="citizen">Citizen</option>
+            <option value="noncitizen">Non-Citizen</option>
+            <!-- Add more countries as needed -->
+        </select>
+    </div>
+    <!--Race-->
+    <div class="col-md-6 mb-3">
+        <label for="race">Race</label>
+        <select id="race" class="form-control">
+            <option value="" disabled selected>Select Race</option>
+            <option value="Malay">Malay</option>
+            <option value="China">China</option>
+            <option value="India">India</option>
+            <option value="Others">Others</option>
+            <!-- Add more countries as needed -->
+        </select>
+    </div>
+    <!--Religion-->
+    <div class="col-md-6 mb-3">
+      <label for="religion">Religion</label>
+      <select id="religion" class="form-control">
+          <option value="" disabled selected>Select Religion</option>
+          <option value="Islam">Islam</option>
+          <option value="Hindu">Hindu</option>
+          <option value="Buddha">Buddha</option>
+          <option value="Christian">Christian</option>
+          <option value="Others">Others</option>
+          <!-- Add more countries as needed -->
+      </select>
+  </div>
+      
+      <div class="col-md-6 mb-3">
+        <label for="dob">Date of Birth</label>
+        <input type="text" id="dob" class="form-control" placeholder="Select Date" />
+    </div>
+    
+    <script>
+        // Initialize flatpickr
+        flatpickr("#dob", {
+            dateFormat: "Y-m-d", // Set date format
+            minDate: "1900-01-01", // Minimum selectable date
+            maxDate: "today", // Maximum selectable date
+        });
+    </script>
+    
+      <div class="col-md-6 mb-3">
+        <label>Contact Number</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Email Address</label><input type="email" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Emergency Contact Name</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Emergency Contact Number</label
+        ><input type="text" class="form-control" />
+      </div>
+    </div>
+  </div>
+  <div class="card p-4">
+    <!-- 2. Address Information -->
+    <h4 class="mt-4">Address Information</h4>
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <label>Permanent Address</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>City</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Postcode</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>State</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Phone Number (if different)</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Address in Home Country</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>City</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Country</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Postal Code</label><input type="text" class="form-control" />
+      </div>
+    </div>
+  </div>
+  <div class="card p-4">
+    <!-- 3. Program Information -->
+    <h4 class="mt-4">Program Information</h4>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="religion">Program Applied For</label>
+        <select id="programstatus" class="form-control">
+            <option value="" disabled selected>Select Program Status</option>
+            <option value="diploma">Diploma</option>
+            <option value="degree">Degree</option>
+            <option value="master">Master</option>
+            <option value="phd">PHD</option>
+            <option value="Others">Others</option>
+            <!-- Add more countries as needed -->
+        </select>
+      
+    </div>
+
+      <!--Program-->
+      <div class="col-md-6 mb-3">
+        <label for="religion">Program</label>
+        <select id="programstatus" class="form-control">
+            <option value="" disabled selected>Select Program</option>
+            <option value="bib">Bachelor of Business (HONS) International Business</option>
+            <option value="saab">Bachelor of Business (HONS) Engineering Entrepreneurship</option>
+            <option value="opel">Bachelor of New Media Communications (HONS)</option>
+            <option value="audi">Bachelor of Computer Engineering (HONS)</option>
+            <!-- Add more countries as needed -->
+        </select>
+      
+    </div>
+    
+      <div class="col-md-6 mb-3">
+        <label class="form-label d-block">Mode of Study</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="studyMode"
+            value="Full-Time"
+          /><label class="form-check-label">Full-Time</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="studyMode"
+            value="Part-Time"
+          /><label class="form-check-label">Part-Time</label>
+        </div>
+      </div>
+       <!--Intake Year -->
+       <div class="col-md-6 mb-3">
+        <label for="Intake">Intake</label>
+        <select id="Intakeyear" class="form-control">
+            <option value="" disabled selected>Select Year</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+            <!-- Add more countries as needed -->
+        </select>
+      
+    </div>
+      <div class="col-md-6 mb-3">
+        <label>Intake Year</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label d-block">Semester</label>
+  
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="semester"
+            value="March"
+          /><label class="form-check-label">March</label>
+        </div>
+        
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="semester"
+            value="October"
+          /><label class="form-check-label">October</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card p-4">
+    <!-- 4. Academic Qualifications -->
+    <h4 class="mt-4">Academic Qualifications</h4>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="hqo">Highest Qualification Obtained</label>
+        <select id="Intakeyear" class="form-control">
+            <option value="" disabled selected>Select Qualification</option>
+            <option value="PMR">PMR</option>
+            <option value="SPM">SPM</option>
+            <option value="DIPLOMA">DIPLOMA</option>
+            <option value="DEGREE">DEGREE</option>
+            <option value="MASTER">MASTER</option>
+            <option value="PHD">PHD</option>
+            <option value="OTHERS">OTHERS</option>
+            <!-- Add more countries as needed -->
+        </select>
+      
+    </div>
+      <div class="col-md-6 mb-3">
+        <label>Institution Name</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Country of Institution</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Year of Graduation</label
+        ><input type="text" class="form-control" />
+      </div>
+      <!-- Certificate -->
+      <div class="mb-3 text-center">
+        <img src="" alt="Result" class="rounded-circle mb-3 profile-img">
+        <input type="file" class="form-control-file" id="Result">
+        <img src="" alt="Certificate of completion of studies" class="rounded-circle mb-3 profile-img">
+        <input type="file" class="form-control-file" id="Certificate of completion of studies">
+      </div>
+    </div>
+  </div>
+  <!-- Previous Education -->
+  <h4 class="mt-4">Previous Education</h4>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label>Secondary School (Name & Address)</label
+      ><input type="text" class="form-control" />
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="hqo">Highest Qualification Obtained</label>
+      <select id="Intakeyear" class="form-control">
+          <option value="" disabled selected>Select Qualification</option>
+          <option value="PMR">PMR</option>
+          <option value="SPM">SPM</option>
+          <option value="DIPLOMA">DIPLOMA</option>
+          <option value="DEGREE">DEGREE</option>
+          <option value="MASTER">MASTER</option>
+          <option value="PHD">PHD</option>
+          <option value="OTHERS">OTHERS</option>
+          <!-- Add more countries as needed -->
+      </select>
+    
+  </div>
+    <div class="col-md-6 mb-3">
+      <label>Higher Education Institution Name</label
+      ><input type="text" class="form-control" />
+    </div>
+    
+</div>
+  <div class="card p-4">
+    <!-- 5. English Proficiency -->
+    <h4 class="mt-4">English Proficiency</h4>
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <label class="form-label d-block">English Test Taken</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="englishTest"
+            value="TOEFL"
+          /><label class="form-check-label">TOEFL</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="englishTest"
+            value="IELTS"
+          /><label class="form-check-label">IELTS</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="englishTest"
+            value="Other"
+          /><label class="form-check-label">Other (specify)</label>
+        </div>
+        <input
+          type="text"
+          class="form-control mt-2"
+          placeholder="Specify other test"
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Score</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Test Date</label><input type="date" class="form-control" />
+      </div>
+      <!-- Certificate -->
+      <div class="mb-3 text-left">
+        <img src="" alt="Result" class="rounded-circle mb-3 profile-img">
+        <input type="file" class="form-control-file" id="Result">
+      </div>
+    </div>
+  </div>
+  <div class="card p-4">
+    <!-- 6. Visa Information -->
+    <h4 class="mt-4">Visa Information (International Students)</h4>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label d-block">Require Student Visa?</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="requireVisa"
+            value="Yes"
+          /><label class="form-check-label">Yes</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="requireVisa"
+            value="No"
+          /><label class="form-check-label">No</label>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label d-block">Type of Visa</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="visaType"
+            value="Student Visa"
+          /><label class="form-check-label">Student Visa</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="visaType"
+            value="Dependent Visa"
+          /><label class="form-check-label">Dependent Visa</label>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Visa Expiry Date</label
+        ><input type="date" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Passport Expiry Date</label
+        ><input type="date" class="form-control" />
+      </div>
+      <div class="mb-3 text-left">
+        <img src="" alt="First Page Visa" class="rounded-circle mb-3 profile-img">
+        <input type="file" class="form-control-file" id="firstpage">
+        <img src="" alt="Secong Page Visa" class="rounded-circle mb-3 profile-img">
+        <input type="file" class="form-control-file" id="secondpage">
+        
+      </div>
+    </div>
+  </div>
+  <div class="card p-4">
+    <!-- 7. Health Information -->
+    <h4 class="mt-4">Health Information</h4>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label d-block">Any known medical conditions?</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="medicalConditions"
+            value="Yes"
+          /><label class="form-check-label">Yes</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="medicalConditions"
+            value="No"
+          /><label class="form-check-label">No</label>
+        </div>
+        <input
+          type="text"
+          class="form-control mt-2"
+          placeholder="If yes, please specify"
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label d-block"
+          >Currently on any regular medication?</label
+        >
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="medication"
+            value="Yes"
+          /><label class="form-check-label">Yes</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="medication"
+            value="No"
+          /><label class="form-check-label">No</label>
+        </div>
+        <input
+          type="text"
+          class="form-control mt-2"
+          placeholder="If yes, please specify"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="card p-4">
+    
+  <div class="card p-4">
+    <!-- 9. Parent/Guardian Information -->
+    <h4 class="mt-4">Parent/Guardian Information</h4>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Father's/Guardian's Name</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Occupation</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Phone Number</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Mother's/Guardian's Name</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Occupation</label><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Phone Number</label><input type="text" class="form-control" />
+      </div>
+    </div>
+  </div>
+  <div class="card p-4">
+    <!-- 10. Declaration -->
+    <h4 class="mt-4">Declaration</h4>
+    <div class="form-check mb-3">
+      <input 
+        class="form-check-input" 
+        type="checkbox" 
+        id="declarationCheck" 
+        required
+      >
+      <label class="form-check-label" for="declarationCheck">
+        I declare that the information provided is accurate.
+      </label>
+    </div>
+    
+    
+      <div class="col-md-6 mb-3">
+        <label>Date</label><input type="date" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Signature of Parent/Guardian (if applicable)</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Date</label><input type="date" class="form-control" />
+      </div>
+    </div>
+  </div>
+  <div class="card p-4">
+    <!-- 11. For Office Use Only -->
+    <h4 class="mt-4">For Office Use Only</h4>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Registration Number</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label d-block">Application Status</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="status"
+            value="Approved"
+          /><label class="form-check-label">Approved</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="status"
+            value="Pending"
+          /><label class="form-check-label">Pending</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="status"
+            value="Rejected"
+          /><label class="form-check-label">Rejected</label>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Admission Officer's Name</label
+        ><input type="text" class="form-control" />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Date Processed</label><input type="date" class="form-control" />
+      </div>
+    </div>
+  </div>
+
+  <div class="text-end mt-4">
+    <button type="submit" class="btn bg-gradient-dark mb-0">Submit</button>
+  </div>
+</form>
