@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Application Review Dashboard</title>
+
+  <!-- Material Dashboard CSS -->
+  <link href="https://demos.creative-tim.com/material-dashboard/assets/css/material-dashboard.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Application Review</h3>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">+ Add Application</button>
+  </div>
+
+  <table class="table align-items-center mb-0" id="appTable">
+    <thead>
+      <tr>
+        <th>Name of student</th>
+        <th>Agent</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data rows injected by JS -->
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal for Add/Edit -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="appForm" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">New Application</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editIndex" />
+        <div class="mb-3">
+          <label class="form-label">Name</label>
+          <input type="text" id="name" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Position</label>
+          <input type="text" id="position" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select class="form-control" id="status" required>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Date</label>
