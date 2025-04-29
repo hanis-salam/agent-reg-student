@@ -175,6 +175,7 @@
         <div class="row mb-4">
           <div id="content">
             <!-- masuk isi sini -->
+            pukimak jgn lupa sidemenu edit untuk admin dear pukimak tlg mc !!!
           </div>
         </div>
       </div>
@@ -191,36 +192,6 @@
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
     <script>
-      function loadPage(pageName, element) {
-        console.log(pageName);
-        fetch("./" + pageName + ".html")
-          .then((res) => res.text())
-          .then((data) => {
-            document.getElementById("content").innerHTML = data;
-          });
-
-        if (element) {
-          document.querySelectorAll(".nav-link").forEach((el) => {
-            el.classList.remove("active", "bg-gradient-dark", "text-white");
-          });
-        }
-
-        if (pageName === "dashboard") {
-          const secondLink = document.querySelector(".nav-link.dashboard-link");
-          secondLink.classList.add("active", "bg-gradient-dark", "text-white");
-        } else if (pageName === "profile") {
-          const thridLink = document.querySelector(".nav-link.profile-link");
-          thridLink.classList.add("active", "bg-gradient-dark", "text-white");
-        } else if (pageName === "create-agent") {
-          const forthLink = document.querySelector(
-            ".nav-link.create-agent-link"
-          );
-          forthLink.classList.add("active", "bg-gradient-dark", "text-white");
-        } else {
-          const secondLink = document.querySelector(".nav-link.dashboard-link");
-          secondLink.classList.add("active", "bg-gradient-dark", "text-white");
-        }
-      }
       function signout() {
         // Clear session
         sessionStorage.removeItem("username");
@@ -229,13 +200,6 @@
         // Optional: redirect to login page
         window.location.href = "sign-in.html";
       }
-      window.addEventListener("DOMContentLoaded", () => {
-        const firstLink = document.querySelector(".nav-link.sidebar-link");
-
-        loadPage("test", firstLink);
-
-        firstLink.classList.add("active", "bg-gradient-dark", "text-white");
-      });
     </script>
   </body>
 </html>

@@ -36,6 +36,11 @@
       href="../assets/css/material-dashboard.css?v=3.2.0"
       rel="stylesheet"
     />
+    <link
+      id="pagestyle"
+      href="../assets/css/user-profile.css"
+      rel="stylesheet"
+    />
   </head>
 
   <body class="g-sidenav-show bg-gray-100">
@@ -65,7 +70,7 @@
           <li class="nav-item">
             <a
               class="nav-link text-dark active bg-gradient-dark text-white sidebar-link dashboard-link"
-              onclick="loadPage('home', this)"
+              onclick="loadPage('home-agent', this)"
             >
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text ms-1">Dashboard</span>
@@ -81,26 +86,18 @@
           </li>
           <li class="nav-item">
             <a
-              class="nav-link text-dark profile-link"
-              onclick="loadPage('home', this)"
+              class="nav-link text-dark"
+              onclick="loadPage('home-agent', this)"
             >
               <i class="material-symbols-rounded opacity-5">person</i>
               <span class="nav-link-text ms-1">Home</span>
             </a>
           </li>
+
           <li class="nav-item">
             <a
-              class="nav-link text-dark create-agent-link"
-              onclick="loadPage('create-agent', this)"
-            >
-              <i class="material-symbols-rounded opacity-5">assignment</i>
-              <span class="nav-link-text ms-1">Create a new agent</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link text-dark create-agent-link"
-              onclick="loadPage('agent_profile', this)"
+              class="nav-link text-dark profile-link"
+              href="../pages/user-profile.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
               <span class="nav-link-text ms-1">View agent profile</span>
@@ -109,7 +106,7 @@
           <li class="nav-item">
             <a
               class="nav-link text-dark create-agent-link"
-              onclick="loadPage('applicationform-admin', this)"
+              onclick="loadPage('appstudent-agent', this)"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
               <span class="nav-link-text ms-1">Add New Application</span>
@@ -173,8 +170,42 @@
         </div>
         <!-- content -->
         <div class="row mb-4">
-          <div id="content">
-            <!-- masuk isi sini -->
+          <div class="container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+              <h3>User Profile</h3>
+            </div>
+
+            <!-- Profile Picture -->
+            <div class="profile-img-container">
+              <!-- <img
+                id="profileImg"
+                src="https://via.placeholder.com/120"
+                alt="Profile Picture"
+                class="profile-img"
+              /> -->
+            </div>
+
+            <!-- Profile Info -->
+            <div class="profile-info">
+              <h4 id="fullName">Full Name</h4>
+              <p>
+                <strong>Email:</strong>
+                <span id="email">email@example.com</span>
+              </p>
+              <p>
+                <strong>Company Name:</strong>
+                <span id="company">Company Name</span>
+              </p>
+              <p>
+                <strong>Company ID:</strong> <span id="companyId">123456</span>
+              </p>
+              <p><strong>Role:</strong> <span id="role">Agent</span></p>
+              <p>
+                <strong>Bio:</strong>
+                <span id="bio">Short bio about the user.</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -190,52 +221,16 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+    <!-- profile -->
+    <script src="../assets/js/db/profile.js"></script>
     <script>
-      function loadPage(pageName, element) {
-        console.log(pageName);
-        fetch("./" + pageName + ".html")
-          .then((res) => res.text())
-          .then((data) => {
-            document.getElementById("content").innerHTML = data;
-          });
-
-        if (element) {
-          document.querySelectorAll(".nav-link").forEach((el) => {
-            el.classList.remove("active", "bg-gradient-dark", "text-white");
-          });
-        }
-
-        if (pageName === "dashboard") {
-          const secondLink = document.querySelector(".nav-link.dashboard-link");
-          secondLink.classList.add("active", "bg-gradient-dark", "text-white");
-        } else if (pageName === "profile") {
-          const thridLink = document.querySelector(".nav-link.profile-link");
-          thridLink.classList.add("active", "bg-gradient-dark", "text-white");
-        } else if (pageName === "create-agent") {
-          const forthLink = document.querySelector(
-            ".nav-link.create-agent-link"
-          );
-          forthLink.classList.add("active", "bg-gradient-dark", "text-white");
-        } else {
-          const secondLink = document.querySelector(".nav-link.dashboard-link");
-          secondLink.classList.add("active", "bg-gradient-dark", "text-white");
-        }
-      }
       function signout() {
         // Clear session
-        sessionStorage.removeItem("username");
-        sessionStorage.removeItem("role");
+        sessionStorage.removeItem("loginDetail");
 
         // Optional: redirect to login page
         window.location.href = "sign-in.html";
       }
-      window.addEventListener("DOMContentLoaded", () => {
-        const firstLink = document.querySelector(".nav-link.sidebar-link");
-
-        loadPage("test", firstLink);
-
-        firstLink.classList.add("active", "bg-gradient-dark", "text-white");
-      });
     </script>
   </body>
 </html>

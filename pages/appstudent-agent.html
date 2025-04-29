@@ -48,7 +48,8 @@
     <div class="row">
       <!-- Profile Picture -->
       <div class="mb-3 text-left">
-        <img src="https://via.placeholder.com/150" alt="Profile Picture" class="rounded-circle mb-3 profile-img">
+        <!--<img src="" alt="Profile Picture" class="rounded-circle mb-3 profile-img">-->
+        <label>Profile photo</label>
         <input type="file" class="form-control-file" id="profilePic">
       </div>
       <div class="col-md-6 mb-3">
@@ -236,6 +237,7 @@
             type="radio"
             name="studyMode"
             value="Part-Time"
+            disabled
           /><label class="form-check-label">Part-Time</label>
         </div>
       </div>
@@ -256,9 +258,7 @@
         </select>
       
     </div>
-      <div class="col-md-6 mb-3">
-        <label>Intake Year</label><input type="text" class="form-control" />
-      </div>
+     
       <div class="col-md-6 mb-3">
         <label class="form-label d-block">Semester</label>
   
@@ -315,14 +315,55 @@
       </div>
       <!-- Certificate -->
       <div class="mb-3 text-center">
-        <img src="" alt="Result" class="rounded-circle mb-3 profile-img">
-        <input type="file" class="form-control-file" id="Result">
-        <img src="" alt="Certificate of completion of studies" class="rounded-circle mb-3 profile-img">
-        <input type="file" class="form-control-file" id="Certificate of completion of studies">
+        <!--<img src="" alt="Result" class="rounded-circle mb-3 profile-img">-->
+        <label>Result</label>
+        <input type="file" class="form-control-file" id="ResultQualification" accept=".jpg, .jpeg, .png">
+        <small id="fileHelp" class="form-text text-muted"></small>
+        
+        <script>
+          document.getElementById('ResultQualification').addEventListener('change', function () {
+            const file = this.files[0];
+            const helpText = document.getElementById('fileHelp');
+        
+            if (file) {
+              const fileSizeMB = file.size / (1024 * 1024); // Convert to MB
+        
+              if (fileSizeMB > 2) {
+                helpText.textContent = "❌ File is too large. Max size is 2MB.";
+                this.value = ""; // Clear the file input
+              } else {
+                helpText.textContent = "✅ File looks good!";
+              }
+            }
+          });
+        </script>
+        <label>Certificate of completion studies</label>
+        <!--<img src="" alt="Certificate of completion of studies" class="rounded-circle mb-3 profile-img">-->
+        <input type="file" class="form-control-file" id="Certificate-completion-studies" accept=".jpg, .jpeg, .png">
+        <small id="fileHelp" class="form-text text-muted"></small>
+        
+        <script>
+          document.getElementById('Certificate-completion-studies').addEventListener('change', function () {
+            const file = this.files[0];
+            const helpText = document.getElementById('fileHelp');
+        
+            if (file) {
+              const fileSizeMB = file.size / (1024 * 1024); // Convert to MB
+        
+              if (fileSizeMB > 2) {
+                helpText.textContent = "❌ File is too large. Max size is 2MB.";
+                this.value = ""; // Clear the file input
+              } else {
+                helpText.textContent = "✅ File looks good!";
+              }
+            }
+          });
+        </script>
       </div>
     </div>
   </div>
   <!-- Previous Education -->
+   <div class="card p-4">
   <h4 class="mt-4">Previous Education</h4>
   <div class="row">
     <div class="col-md-6 mb-3">
@@ -344,11 +385,14 @@
       </select>
     
   </div>
+
+</div>
     <div class="col-md-6 mb-3">
       <label>Higher Education Institution Name</label
       ><input type="text" class="form-control" />
     </div>
     
+</div>
 </div>
   <div class="card p-4">
     <!-- 5. English Proficiency -->
@@ -394,8 +438,28 @@
       </div>
       <!-- Certificate -->
       <div class="mb-3 text-left">
-        <img src="" alt="Result" class="rounded-circle mb-3 profile-img">
-        <input type="file" class="form-control-file" id="Result">
+        <!--<img src="" alt="Result" class="rounded-circle mb-3 profile-img">-->
+        <label>Result English</label>
+        <input type="file" class="form-control-file" id="ResultEnglish"accept=".jpg, .jpeg, .png">
+        <small id="fileHelp" class="form-text text-muted"></small>
+        
+        <script>
+          document.getElementById('ResultEnglish').addEventListener('change', function () {
+            const file = this.files[0];
+            const helpText = document.getElementById('fileHelp');
+        
+            if (file) {
+              const fileSizeMB = file.size / (1024 * 1024); // Convert to MB
+        
+              if (fileSizeMB > 2) {
+                helpText.textContent = "❌ File is too large. Max size is 2MB.";
+                this.value = ""; // Clear the file input
+              } else {
+                helpText.textContent = "✅ File looks good!";
+              }
+            }
+          });
+        </script>
       </div>
     </div>
   </div>
@@ -449,19 +513,72 @@
         <label>Passport Expiry Date</label
         ><input type="date" class="form-control" />
       </div>
-      <div class="mb-3 text-left">
-        <img src="" alt="First Page Visa" class="rounded-circle mb-3 profile-img">
-        <input type="file" class="form-control-file" id="firstpage">
-        <img src="" alt="Secong Page Visa" class="rounded-circle mb-3 profile-img">
-        <input type="file" class="form-control-file" id="secondpage">
-        
+     <!-- Thumbnail Image and File Input -->
+<div class="mb-3 text-left">
+  <img src="../assets/img/front page passport.png" 
+       alt="First Page Visa" 
+       class="mb-3 profile-img img-thumbnail zoomable" 
+       style="width: 50px; cursor: pointer;" 
+       data-bs-toggle="modal" 
+       data-bs-target="#zoomModal">
+
+  <input type="file" class="form-control-file" id="firstpage">
+</div>
+
+<!-- Modal for Zoomed Image -->
+<div class="modal fade" id="zoomModal" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <img src="../assets/img/front page passport.png" alt="Zoomed Image" class="img-fluid">
       </div>
+    </div>
+  </div>
+</div>
+
     </div>
   </div>
   <div class="card p-4">
     <!-- 7. Health Information -->
     <h4 class="mt-4">Health Information</h4>
     <div class="row">
+      <div class="mb-3">
+        <label class="form-label">
+          Please download the health declaration form, fill it out, and upload it here.
+        </label><br>
+        <a 
+          href="../docs/Form A - Health Declaration Form For Applicant (PW).pdf" 
+          download 
+          class="btn btn-outline-primary mt-2"
+          target="_blank"
+        >
+          📄 Download Health Declaration Form
+        </a>
+        <div class="mb-3 text-left">
+          <!--<img src="" alt="Result" class="rounded-circle mb-3 profile-img">-->
+          <label>Upload Here after you fill up the health Application</label>
+          <input type="file" class="form-control-file" id="Healthdeclare"accept=".jpg, .jpeg, .png">
+          <small id="fileHelp" class="form-text text-muted"></small>
+          
+          <script>
+            document.getElementById('Healthdeclare').addEventListener('change', function () {
+              const file = this.files[0];
+              const helpText = document.getElementById('fileHelp');
+          
+              if (file) {
+                const fileSizeMB = file.size / (1024 * 1024); // Convert to MB
+          
+                if (fileSizeMB > 2) {
+                  helpText.textContent = "❌ File is too large. Max size is 2MB.";
+                  this.value = ""; // Clear the file input
+                } else {
+                  helpText.textContent = "✅ File looks good!";
+                }
+              }
+            });
+          </script>
+        </div>
+  
       <div class="col-md-6 mb-3">
         <label class="form-label d-block">Any known medical conditions?</label>
         <div class="form-check form-check-inline">
@@ -469,8 +586,10 @@
             class="form-check-input"
             type="radio"
             name="medicalConditions"
+            id="medicalYes"
             value="Yes"
-          /><label class="form-check-label">Yes</label>
+          />
+          <label class="form-check-label" for="medicalYes">Yes</label>
         </div>
         <div class="form-check form-check-inline">
           <input
@@ -483,13 +602,10 @@
         <input
           type="text"
           class="form-control mt-2"
-          placeholder="If yes, please specify"
-        />
+          placeholder="If yes, please specify"/>
       </div>
       <div class="col-md-6 mb-3">
-        <label class="form-label d-block"
-          >Currently on any regular medication?</label
-        >
+        <label class="form-label d-block">Currently on any regular medication?</label>
         <div class="form-check form-check-inline">
           <input
             class="form-check-input"
@@ -497,7 +613,8 @@
             name="medication"
             value="Yes"
           /><label class="form-check-label">Yes</label>
-        </div>
+        </div>  
+    
         <div class="form-check form-check-inline">
           <input
             class="form-check-input"
@@ -514,6 +631,7 @@
       </div>
     </div>
   </div>
+</div>
   <div class="card p-4">
     
   <div class="card p-4">
@@ -542,6 +660,86 @@
       </div>
     </div>
   </div>
+    <div class="card p-4">
+      <!-- 10. PAYMENT RECEIPT -->
+      <h4 class="mt-4">PAYMENT RECEIPT</h4>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>After applicant make a payment for RM128.00, please upload receipt here</label>
+          <input type="file" class="form-control-file" id="PaymentChecking" accept=".jpg, .jpeg, .png">
+          <small id="fileHelp" class="form-text text-muted"></small>
+    <!--<br>
+    <button type="submit">Upload</button>-->
+  
+  <script>
+    const fileInput = document.getElementById('profilePic');
+    const helpText = document.getElementById('fileHelp');
+  
+    let finalFile = null;
+  
+    fileInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+  
+      if (!file.type.startsWith('image/')) {
+        helpText.textContent = "❌ Please upload an image file.";
+        return;
+      }
+  
+      const maxSizeMB = 2;
+      const maxSizeBytes = maxSizeMB * 1024 * 1024;
+  
+      if (file.size > maxSizeBytes) {
+        // Compress image
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const img = new Image();
+          img.onload = function () {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+  
+            const scaleFactor = Math.sqrt(maxSizeBytes / file.size); // adjust size
+            canvas.width = img.width * scaleFactor;
+            canvas.height = img.height * scaleFactor;
+  
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  
+            canvas.toBlob(function (blob) {
+              finalFile = new File([blob], file.name, { type: file.type });
+              helpText.textContent = `✅ Image compressed to ${(finalFile.size / 1024 / 1024).toFixed(2)} MB`;
+            }, file.type, 0.8); // 0.8 = quality (80%)
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        finalFile = file;
+        helpText.textContent = "✅ File is under 2MB, no compression needed.";
+      }
+    });
+  
+    document.getElementById('uploadForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+  
+      if (!finalFile) {
+        alert("Please select a valid image.");
+        return;
+      }
+  
+      // Upload using FormData (as example)
+      const formData = new FormData();
+      formData.append('file', finalFile);
+  
+      // Simulate upload
+      console.log("Uploading:", finalFile);
+      alert("✅ File ready to upload! (check console)");
+  
+      // You could now use fetch() or AJAX to send `formData` to your backend
+    });
+  </script>
+        </div>
+      </div>
+    </div>
   <div class="card p-4">
     <!-- 10. Declaration -->
     <h4 class="mt-4">Declaration</h4>
@@ -570,51 +768,7 @@
       </div>
     </div>
   </div>
-  <div class="card p-4">
-    <!-- 11. For Office Use Only -->
-    <h4 class="mt-4">For Office Use Only</h4>
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label>Registration Number</label
-        ><input type="text" class="form-control" />
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label d-block">Application Status</label>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="status"
-            value="Approved"
-          /><label class="form-check-label">Approved</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="status"
-            value="Pending"
-          /><label class="form-check-label">Pending</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="status"
-            value="Rejected"
-          /><label class="form-check-label">Rejected</label>
-        </div>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label>Admission Officer's Name</label
-        ><input type="text" class="form-control" />
-      </div>
-      <div class="col-md-6 mb-3">
-        <label>Date Processed</label><input type="date" class="form-control" />
-      </div>
-    </div>
-  </div>
-
+  
   <div class="text-end mt-4">
     <button type="submit" class="btn bg-gradient-dark mb-0">Submit</button>
   </div>

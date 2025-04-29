@@ -65,7 +65,7 @@
           <li class="nav-item">
             <a
               class="nav-link text-dark active bg-gradient-dark text-white sidebar-link dashboard-link"
-              onclick="loadPage('home', this)"
+              onclick="loadPage('home-agent', this)"
             >
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text ms-1">Dashboard</span>
@@ -81,26 +81,18 @@
           </li>
           <li class="nav-item">
             <a
-              class="nav-link text-dark profile-link"
-              onclick="loadPage('home', this)"
+              class="nav-link text-dark"
+              onclick="loadPage('home-agent', this)"
             >
               <i class="material-symbols-rounded opacity-5">person</i>
               <span class="nav-link-text ms-1">Home</span>
             </a>
           </li>
+
           <li class="nav-item">
             <a
-              class="nav-link text-dark create-agent-link"
-              onclick="loadPage('create-agent', this)"
-            >
-              <i class="material-symbols-rounded opacity-5">assignment</i>
-              <span class="nav-link-text ms-1">Create a new agent</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link text-dark create-agent-link"
-              onclick="loadPage('agent_profile', this)"
+              class="nav-link text-dark profile-link"
+              href="../pages/user-profile.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
               <span class="nav-link-text ms-1">View agent profile</span>
@@ -109,7 +101,7 @@
           <li class="nav-item">
             <a
               class="nav-link text-dark create-agent-link"
-              onclick="loadPage('applicationform-admin', this)"
+              onclick="loadPage('appstudent-agent', this)"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
               <span class="nav-link-text ms-1">Add New Application</span>
@@ -173,9 +165,7 @@
         </div>
         <!-- content -->
         <div class="row mb-4">
-          <div id="content">
-            <!-- masuk isi sini -->
-          </div>
+          <div id="content"></div>
         </div>
       </div>
     </main>
@@ -190,52 +180,85 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+    <!-- profile -->
+
     <script>
-      function loadPage(pageName, element) {
-        console.log(pageName);
-        fetch("./" + pageName + ".html")
-          .then((res) => res.text())
-          .then((data) => {
-            document.getElementById("content").innerHTML = data;
-          });
+      fetch("agent/student-list-status.html")
+        .then((response) => response.text())
+        .then((html) => {
+          const contentDiv = document.getElementById("content");
 
-        if (element) {
-          document.querySelectorAll(".nav-link").forEach((el) => {
-            el.classList.remove("active", "bg-gradient-dark", "text-white");
-          });
-        }
+          // Create a temporary container
+          const temp = document.createElement("div");
+          temp.innerHTML = html;
 
-        if (pageName === "dashboard") {
-          const secondLink = document.querySelector(".nav-link.dashboard-link");
-          secondLink.classList.add("active", "bg-gradient-dark", "text-white");
-        } else if (pageName === "profile") {
-          const thridLink = document.querySelector(".nav-link.profile-link");
-          thridLink.classList.add("active", "bg-gradient-dark", "text-white");
-        } else if (pageName === "create-agent") {
-          const forthLink = document.querySelector(
-            ".nav-link.create-agent-link"
-          );
-          forthLink.classList.add("active", "bg-gradient-dark", "text-white");
-        } else {
-          const secondLink = document.querySelector(".nav-link.dashboard-link");
-          secondLink.classList.add("active", "bg-gradient-dark", "text-white");
-        }
-      }
+          // Move everything into the target div
+          while (temp.firstChild) {
+            const child = temp.firstChild;
+            // If it's a script, re-insert to run it
+            if (child.tagName === "SCRIPT") {
+              const newScript = document.createElement("script");
+              if (child.src) {
+                newScript.src = child.src;
+              } else {
+                newScript.textContent = child.textContent;
+              }
+              document.body.appendChild(newScript);
+              temp.removeChild(child);
+            } else {
+              contentDiv.appendChild(child);
+            }
+          }
+        })
+        .catch((error) => console.error("Error loading external HTML:", error));
+
       function signout() {
         // Clear session
-        sessionStorage.removeItem("username");
-        sessionStorage.removeItem("role");
+        sessionStorage.removeItem("loginDetail");
 
         // Optional: redirect to login page
         window.location.href = "sign-in.html";
       }
-      window.addEventListener("DOMContentLoaded", () => {
-        const firstLink = document.querySelector(".nav-link.sidebar-link");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="../../assets/js/db/connection.js"></script>
+    <script>
+      async function fetchStudentNames() {
+        console.log("hello"); // should appear in the console
 
-        loadPage("test", firstLink);
+        const { data, error } = await window.supabase
+          .from("student_applications")
+          .select("full_name");
 
-        firstLink.classList.add("active", "bg-gradient-dark", "text-white");
-      });
+        if (error) {
+          console.error("Error fetching student names:", error.message);
+          return;
+        }
+
+        const tbody = document.querySelector("tbody");
+        tbody.innerHTML = "";
+
+        data.forEach((student, index) => {
+          const row = `
+            <tr>
+              <td class="text-sm text-center">${index + 1}</td>
+              <td>
+                <div class="d-flex px-2 py-1">
+                  <div class="my-auto">
+                    <h6 class="mb-0 text-sm">${student.full_name}</h6>
+                  </div>
+                </div>
+              </td>
+              <td>
+            <span class="badge bg-warning text-dark text-xs">Pending</span>
+          </td>
+            </tr>`;
+          tbody.innerHTML += row;
+        });
+      }
+
+      // Call the function on DOMContentLoaded
+      document.addEventListener("DOMContentLoaded", fetchStudentNames);
     </script>
   </body>
 </html>

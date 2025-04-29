@@ -3,7 +3,7 @@ const role = sessionStorage.getItem("role");
 
 if (username && role) {
   if (role === "admin") {
-    window.location.href = "dashboard.html";
+    window.location.href = "dashboard-admin.html"; //dahboard-admin
   } else {
     window.location.href = "dashboard-agent.html";
   }
@@ -16,8 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorMessage = document.getElementById("error-message");
 
     const { data, error } = await supabase
-      .from("users")
-      .select("id, role")
+      .from("user")
+      .select(
+        " role,email, full_name,profile_image_url, phone_number,bio, company_name, company_SSM"
+      )
       .eq("username", username)
       .eq("password", password) // ❗ Do not store plain text passwords in production!
       .single();
@@ -27,14 +29,24 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       errorMessage.style.display = "none";
       // Save to sessionStorage
-      sessionStorage.setItem("username", data.username);
-      sessionStorage.setItem("role", data.role);
+      const loginDetail = {
+        role: data.role,
+        email: data.email,
+        full_name: data.full_name,
+        profile_image_url: data.profile_image_url,
+        phone_number: data.phone_number,
+        bio: data.bio,
+        company_name: data.company_name,
+        company_id: data.company_SSM,
+      };
+
+      sessionStorage.setItem("loginDetail", JSON.stringify(loginDetail));
 
       // Redirect based on role
       if (data.role === "admin") {
-        window.location.href = "dashboard.html";
+        window.location.href = "dashboard-admin.html";
       } else {
-        window.location.href = "agent/dashboard-agent.html"; // or any default user page
+        window.location.href = "dashboard-agent.html"; // or any default user page
       }
     }
   });
