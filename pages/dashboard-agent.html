@@ -81,8 +81,8 @@
           </li>
           <li class="nav-item">
             <a
-              class="nav-link text-dark"
-              onclick="loadPage('home-agent', this)"
+              class="nav-link text-dark profile-link"
+              onclick="loadPage('dashboard-agent', this)"
             >
               <i class="material-symbols-rounded opacity-5">person</i>
               <span class="nav-link-text ms-1">Home</span>
@@ -101,7 +101,7 @@
           <li class="nav-item">
             <a
               class="nav-link text-dark create-agent-link"
-              onclick="loadPage('appstudent-agent', this)"
+              href="../pages/new-application.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
               <span class="nav-link-text ms-1">Add New Application</span>
@@ -211,54 +211,10 @@
           }
         })
         .catch((error) => console.error("Error loading external HTML:", error));
-
-      function signout() {
-        // Clear session
-        sessionStorage.removeItem("loginDetail");
-
-        // Optional: redirect to login page
-        window.location.href = "sign-in.html";
-      }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script src="../../assets/js/db/connection.js"></script>
-    <script>
-      async function fetchStudentNames() {
-        console.log("hello"); // should appear in the console
-
-        const { data, error } = await window.supabase
-          .from("student_applications")
-          .select("full_name");
-
-        if (error) {
-          console.error("Error fetching student names:", error.message);
-          return;
-        }
-
-        const tbody = document.querySelector("tbody");
-        tbody.innerHTML = "";
-
-        data.forEach((student, index) => {
-          const row = `
-            <tr>
-              <td class="text-sm text-center">${index + 1}</td>
-              <td>
-                <div class="d-flex px-2 py-1">
-                  <div class="my-auto">
-                    <h6 class="mb-0 text-sm">${student.full_name}</h6>
-                  </div>
-                </div>
-              </td>
-              <td>
-            <span class="badge bg-warning text-dark text-xs">Pending</span>
-          </td>
-            </tr>`;
-          tbody.innerHTML += row;
-        });
-      }
-
-      // Call the function on DOMContentLoaded
-      document.addEventListener("DOMContentLoaded", fetchStudentNames);
-    </script>
+    <script src="../assets/js/db/connection.js"></script>
+    <script src="../assets/js/db/fetchStudentList.js"></script>
+    <script src="../assets/js/db/logout.js"></script>
   </body>
 </html>
