@@ -175,7 +175,6 @@
         <div class="row mb-4">
           <div id="content">
             <!-- masuk isi sini -->
-            Form masuk sini
           </div>
         </div>
       </div>
@@ -201,5 +200,52 @@
         window.location.href = "sign-in.html";
       }
     </script>
+    <script>
+      fetch("agent/application-list.html")
+        .then((response) => response.text())
+        .then((html) => {
+          const contentDiv = document.getElementById("content");
+
+          // Create a temporary container
+          const temp = document.createElement("div");
+          temp.innerHTML = html;
+
+          // Move everything into the target div
+          while (temp.firstChild) {
+            const child = temp.firstChild;
+            // If it's a script, re-insert to run it
+            if (child.tagName === "SCRIPT") {
+              const newScript = document.createElement("script");
+              if (child.src) {
+                newScript.src = child.src;
+              } else {
+                newScript.textContent = child.textContent;
+              }
+              document.body.appendChild(newScript);
+              temp.removeChild(child);
+            } else {
+              contentDiv.appendChild(child);
+            }
+          }
+        })
+        .catch((error) => console.error("Error loading external HTML:", error));
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        console.log("test");
+        const storedLoginDetail = JSON.parse(
+          sessionStorage.getItem("loginDetail")
+        );
+        console.log("test", storedLoginDetail);
+        if (storedLoginDetail) {
+          document.getElementById("userFullName").innerText =
+            storedLoginDetail.full_name;
+        }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="../assets/js/db/connection.js"></script>
+    <script src="../assets/js/db/fetchApplicationList.js"></script>
+    <script src="../assets/js/db/logout.js"></script>
   </body>
 </html>

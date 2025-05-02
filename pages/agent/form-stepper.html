@@ -1145,6 +1145,16 @@
 
     // If last step, submit the form
     if (currentTab >= x.length) {
+      const storedLoginDetail = JSON.parse(
+        sessionStorage.getItem("loginDetail")
+      );
+
+      if (storedLoginDetail) {
+        formData = {
+          register_by: storedLoginDetail.full_name,
+        };
+      }
+
       const combined = {
         ...data1,
         ...data2,
@@ -1156,6 +1166,7 @@
         ...data8,
         ...data9,
         ...data10,
+        ...formData,
       };
       console.log("Final combined data:", combined); // for debugging
 
@@ -1201,7 +1212,7 @@
       }
       data1 = {
         // DATA INFORMATION
-        // profile_photo: base64Image,
+        profile_photo: base64Image,
         full_name: document.getElementById("full_name_student").value,
         gender:
           document.querySelector('input[name="gender"]:checked')?.value || null,
@@ -1293,9 +1304,9 @@
           "secondary_qualification"
         ).value,
         year_gradschool: document.getElementById("year_gradschool").value,
-        secondary_school: document.getElementById("secondary_country").value,
-        // graduatesecondry: base64Image,
-        // Cert_sec_stud: base64Image,
+        // secondary_school: document.getElementById("secondary_country").value,
+        graduatesecondry: base64Image,
+        Cert_sec_stud: base64Image,
       };
     } else if (tabIndex === 5) {
       const fileInput5 = document.getElementById("english_result_file");
@@ -1314,7 +1325,7 @@
         english_score: document.getElementById("englishscore").value,
         english_test_date: document.getElementById("english_test_date").value,
 
-        // english_result_file: base64Image,
+        english_result_file: base64Image,
       };
     } else if (tabIndex === 6) {
       const fileInput6 = document.getElementById("Passport_FPage");
@@ -1335,7 +1346,7 @@
           null,
         visa_expiry: document.getElementById("visa_expiry").value,
         // passport_expiry: document.getElementById("passport_expiry").value,
-        // Passport_FPage: base64Image,
+        Passport_FPage: base64Image,
       };
     } else if (tabIndex === 7) {
       const fileInput8 = document.getElementById("Healthdeclare_file");
@@ -1347,7 +1358,7 @@
       }
       data8 = {
         // HEALTH INFORMATION
-        // Healthdeclare_file: base64Image,
+        Healthdeclare_file: base64Image,
         medicalConditions: document.querySelector(
           'input[name="medicalConditions"]'
         ).value,
@@ -1377,7 +1388,7 @@
       }
       data9 = {
         // PAYMENT RECEIPT
-        // payment_receipt_file: base64Image,
+        payment_receipt_file: base64Image,
       };
     } else if (tabIndex === 10) {
       const checkbox = document.getElementById("declarationCheck");
