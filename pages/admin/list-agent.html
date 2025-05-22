@@ -9,12 +9,12 @@
     <link
       rel="apple-touch-icon"
       sizes="76x76"
-      href="../assets/img/apple-icon.png"
+      href="../../assets/img/apple-icon.png"
     />
     <link
       rel="icon"
       type="image/png"
-      href="../assets/img/UPDATE 2025 LOGO UniMAP only-01.png"
+      href="../../assets/img/UPDATE 2025 LOGO UniMAP only-01.png"
     />
     <title>UniMAP@KL</title>
     <!--     Fonts and icons     -->
@@ -24,8 +24,8 @@
       href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900"
     />
     <!-- Nucleo Icons -->
-    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <link href="../../assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="../../assets/css/nucleo-svg.css" rel="stylesheet" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
@@ -33,12 +33,7 @@
     <!-- CSS Files -->
     <link
       id="pagestyle"
-      href="../assets/css/material-dashboard.css?v=3.2.0"
-      rel="stylesheet"
-    />
-    <link
-      id="pagestyle"
-      href="../assets/css/user-profile.css"
+      href="../../assets/css/material-dashboard.css?v=3.2.0"
       rel="stylesheet"
     />
   </head>
@@ -56,7 +51,7 @@
         ></i>
         <a class="navbar-brand px-4 py-3 m-0" href="" target="_blank">
           <img
-            src="../assets/img/Logo@kl UniMAP-01.png"
+            src="../../assets/img/Logo@kl UniMAP-01.png"
             class="navbar-brand-img"
             width="150"
             height="50"
@@ -70,7 +65,7 @@
           <li class="nav-item">
             <a
               class="nav-link text-dark create-agent-link"
-              href="../pages/dashboard-agent.html"
+              href="/pages/dashboard-admin.html"
             >
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text ms-1">Dashboard</span>
@@ -85,32 +80,37 @@
             </h6>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark">
-              <i class="material-symbols-rounded opacity-5">person</i>
-              <span class="nav-link-text ms-1">Home</span>
+            <a
+              class="nav-link text-dark create-agent-link"
+              href="/pages/admin/create-agent.html"
+            >
+              <i class="material-symbols-rounded opacity-5">assignment</i>
+              <span class="nav-link-text ms-1">Create a new agent</span>
             </a>
           </li>
-
           <li class="nav-item">
             <a
               class="nav-link text-dark active bg-gradient-dark text-white sidebar-link dashboard-link"
-              href="../pages/user-profile.html"
+              href="/pages/admin/list-agent.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
-              <span class="nav-link-text ms-1">View agent profile</span>
+              <span class="nav-link-text ms-1">List of Agent</span>
             </a>
           </li>
           <li class="nav-item">
             <a
               class="nav-link text-dark create-agent-link"
-              href="../pages/new-application.html"
+              href="/pages/admin/application-list.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
-              <span class="nav-link-text ms-1">Add New Application</span>
+              <span class="nav-link-text ms-1">List of Application</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark create-agent-link">
+            <a
+              class="nav-link text-dark create-agent-link"
+              onclick="loadPage('receipt', this)"
+            >
               <i class="material-symbols-rounded opacity-5">assignment</i>
               <span class="nav-link-text ms-1">Receipt Payment</span>
             </a>
@@ -164,67 +164,98 @@
         </div>
         <!-- content -->
         <div class="row mb-4">
-          <div class="container">
-            <!-- Profile Header -->
-            <div class="profile-header">
-              <h3>User Profile</h3>
-            </div>
+          <div id="content">
+            <div class="card">
+              <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder"
+                        style="width: 5%"
+                      >
+                        No
+                      </th>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                      >
+                        Username
+                      </th>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                      >
+                        Email
+                      </th>
 
-            <!-- Profile Picture -->
-            <div class="profile-img-container">
-              <!-- <img
-                id="profileImg"
-                src="https://via.placeholder.com/120"
-                alt="Profile Picture"
-                class="profile-img"
-              /> -->
-            </div>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                      >
+                        Agent Name
+                      </th>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                      >
+                        Contact No.
+                      </th>
 
-            <!-- Profile Info -->
-            <div class="profile-info">
-              <h4 id="fullName">Full Name</h4>
-              <p>
-                <strong>Email:</strong>
-                <span id="email">email@example.com</span>
-              </p>
-              <p>
-                <strong>Company Name:</strong>
-                <span id="company">Company Name</span>
-              </p>
-              <p>
-                <strong>Company ID:</strong> <span id="companyId">123456</span>
-              </p>
-              <p><strong>Role:</strong> <span id="role">Agent</span></p>
-              <p>
-                <strong>Bio:</strong>
-                <span id="bio">Short bio about the user.</span>
-              </p>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                      >
+                        Address
+                      </th>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                      >
+                        Company Name
+                      </th>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                      >
+                        Company Id
+                      </th>
+
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                      >
+                        Status
+                      </th>
+
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                      >
+                        Remark
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- No students found, add this row -->
+                    <!-- <tr>
+                      <td colspan="3" class="text-center text-sm text-muted">
+                        No student found
+                      </td>
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </main>
     <!--   Core JS Files   -->
-    <script src="../assets/js/core/popper.min.js"></script>
-    <script src="../assets/js/core/bootstrap.min.js"></script>
-    <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-    <script src="../assets/js/plugins/chartjs.min.js"></script>
+    <script src="../../assets/js/core/popper.min.js"></script>
+    <script src="../../assets/js/core/bootstrap.min.js"></script>
+    <script src="../../assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../../assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="../../assets/js/plugins/chartjs.min.js"></script>
 
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
-    <!-- profile -->
-    <script src="../assets/js/db/profile.js"></script>
-    <script>
-      function signout() {
-        // Clear session
-        sessionStorage.removeItem("loginDetail");
-
-        // Optional: redirect to login page
-        window.location.href = "sign-in.html";
-      }
-    </script>
+    <script src="../../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="../../assets/js/db/connection.js"></script>
+    <script src="../../assets/js/db/fetchAgentList.js"></script>
+    <script src="../../assets/js/db/logout.js"></script>
   </body>
 </html>

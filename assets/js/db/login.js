@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const { data, error } = await supabase
       .from("user")
       .select(
-        " role,email, full_name,profile_image_url, phone_number,bio, company_name, company_SSM"
+        " role,email, full_name,profile_image_url, phone_number,bio, company_name, company_ssm, agent_remark, agent_status"
       )
       .eq("username", username)
       .eq("password", password) // ❗ Do not store plain text passwords in production!
@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       errorMessage.style.display = "none";
       // Save to sessionStorage
       const loginDetail = {
+        username: data.username,
         role: data.role,
         email: data.email,
         full_name: data.full_name,
@@ -37,7 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
         phone_number: data.phone_number,
         bio: data.bio,
         company_name: data.company_name,
-        company_id: data.company_SSM,
+        company_id: data.company_ssm,
+        agent_remark: data.agent_remark,
+        agent_status: data.agent_status,
       };
 
       sessionStorage.setItem("loginDetail", JSON.stringify(loginDetail));

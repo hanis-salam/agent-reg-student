@@ -51,7 +51,7 @@
         ></i>
         <a class="navbar-brand px-4 py-3 m-0" href="" target="_blank">
           <img
-            src="../assets/img/Logo@kl UniMAP-01.png"
+            src="../../assets/img/Logo@kl UniMAP-01.png"
             class="navbar-brand-img"
             width="150"
             height="50"
@@ -65,7 +65,7 @@
           <li class="nav-item">
             <a
               class="nav-link text-dark active bg-gradient-dark text-white sidebar-link dashboard-link"
-              onclick="loadPage('home', this)"
+              href="/pages/dashboard-admin.html"
             >
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text ms-1">Dashboard</span>
@@ -81,17 +81,8 @@
           </li>
           <li class="nav-item">
             <a
-              class="nav-link text-dark profile-link"
-              onclick="loadPage('home', this)"
-            >
-              <i class="material-symbols-rounded opacity-5">person</i>
-              <span class="nav-link-text ms-1">Home</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
               class="nav-link text-dark create-agent-link"
-              onclick="loadPage('create-agent', this)"
+              href="/pages/admin/create-agent.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
               <span class="nav-link-text ms-1">Create a new agent</span>
@@ -100,19 +91,19 @@
           <li class="nav-item">
             <a
               class="nav-link text-dark create-agent-link"
-              onclick="loadPage('agent_profile', this)"
+              href="/pages/admin/list-agent.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
-              <span class="nav-link-text ms-1">View agent profile</span>
+              <span class="nav-link-text ms-1">List of Agent</span>
             </a>
           </li>
           <li class="nav-item">
             <a
               class="nav-link text-dark create-agent-link"
-              onclick="loadPage('applicationform-admin', this)"
+              href="/pages/admin/application-list.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
-              <span class="nav-link-text ms-1">Add New Application</span>
+              <span class="nav-link-text ms-1">List of Application</span>
             </a>
           </li>
           <li class="nav-item">
@@ -201,26 +192,26 @@
       }
     </script>
     <script>
-      fetch("agent/application-list.html")
+      fetch("admin/admin_dashboard.html")
         .then((response) => response.text())
         .then((html) => {
           const contentDiv = document.getElementById("content");
-
-          // Create a temporary container
           const temp = document.createElement("div");
           temp.innerHTML = html;
 
-          // Move everything into the target div
           while (temp.firstChild) {
             const child = temp.firstChild;
-            // If it's a script, re-insert to run it
             if (child.tagName === "SCRIPT") {
               const newScript = document.createElement("script");
+
+              // ✅ Preserve module scripts
+              if (child.type) newScript.type = child.type;
               if (child.src) {
                 newScript.src = child.src;
               } else {
                 newScript.textContent = child.textContent;
               }
+
               document.body.appendChild(newScript);
               temp.removeChild(child);
             } else {
@@ -230,6 +221,7 @@
         })
         .catch((error) => console.error("Error loading external HTML:", error));
     </script>
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         console.log("test");

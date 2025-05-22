@@ -3,5 +3,5 @@ function signout() {
   sessionStorage.removeItem("loginDetail");
 
   // Optional: redirect to login page
-  window.location.href = "sign-in.html";
+  window.location.href = "/pages/sign-in.html";
 }

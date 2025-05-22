@@ -762,7 +762,6 @@
                   class="form-control-file"
                   id="Passport_FPage"
                   type="file"
-                  accept="application/pdf"
                 />
               </div>
             </div>
@@ -893,47 +892,40 @@
             <!-- 10. Parent/Guardian Information -->
             <h4 class="mt-4">Parent/Guardian Information</h4>
             <div class="row">
-              <!-- Father's Details -->
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label>Father's/Guardian's Name</label>
-                  <input class="form-control" id="Father_name" type="text" />
-                </div>
-                <div class="mb-3">
-                  <label>Occupation</label>
-                  <input
-                    class="form-control"
-                    id="Father_Occupation"
-                    type="text"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label>Phone Number</label>
-                  <input class="form-control" id="ContactFather" type="text" />
-                </div>
+              <div class="col-md-6 mb-3">
+                <label> Father's/Guardian's Name </label>
+                <input class="form-control" id="Father_name" type="text" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label> Mother's/Guardian's Name </label>
+                <input class="form-control" id="Mother_name" type="text" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label> Phone Number </label>
+                <input class="form-control" id="ContactFather" type="text" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label> Occupation </label>
+                <input
+                  class="form-control"
+                  id="Mother_Occupation"
+                  type="text"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label> Occupation </label>
+                <input
+                  class="form-control"
+                  id="Father_Occupation"
+                  type="text"
+                />
               </div>
 
-              <!-- Mother's Details -->
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label>Mother's/Guardian's Name</label>
-                  <input class="form-control" id="Mother_name" type="text" />
-                </div>
-                <div class="mb-3">
-                  <label>Occupation</label>
-                  <input
-                    class="form-control"
-                    id="Mother_Occupation"
-                    type="text"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label>Phone Number</label>
-                  <input class="form-control" id="Mother_Phone" type="text" />
-                </div>
+              <div class="col-md-6 mb-3">
+                <label> Phone Number </label>
+                <input class="form-control" id="Mother_Phone" type="text" />
               </div>
-
-              <div class="mb-3 text-left file-upload-group">
+              <div>
                 <label> Parents Income slip </label>
                 <input
                   accept=".jpg, .jpeg, .png"
@@ -1148,7 +1140,6 @@
         ...data10,
         ...formData,
       };
-
       console.log("Final combined data:", combined); // for debugging
 
       const { error } = await supabase
@@ -1234,42 +1225,28 @@
       };
     } else if (tabIndex === 3) {
       const fileInput = document.getElementById("ResultQualification");
-      const file = fileInput ? fileInput.files[0] : null;
-      let base64Image = "";
-      if (file) {
-        base64Image = await toBase64(file);
-      }
+      const file = fileInput?.files[0] || null;
+      let base64Image = file ? await toBase64(file) : "";
 
       const fileInput2 = document.getElementById(
         "Certificate_completion_studies"
       );
-      const file2 = fileInput2 ? fileInput2.files[0] : null;
-      let base64Image2 = "";
-      if (file2) {
-        base64Image2 = await toBase64(file2);
-      }
+      const file2 = fileInput2?.files[0] || null;
+      let base64Image2 = file2 ? await toBase64(file2) : "";
 
       const fileInput3 = document.getElementById("chsi");
-      const file3 = fileInput3 ? fileInput3.files[0] : null;
-      let base64Image3 = "";
-      if (file3) {
-        base64Image3 = await toBase64(file3);
-      }
+      const file3 = fileInput3?.files[0] || null;
+      let base64Image3 = file3 ? await toBase64(file3) : "";
 
       const fileInput4 = document.getElementById("cscse");
-      const file4 = fileInput4 ? fileInput4.files[0] : null;
-      let base64Image4 = "";
-      if (file4) {
-        base64Image4 = await toBase64(file4); // ✅ fixed condition
-      }
+      const file4 = fileInput4?.files[0] || null;
+      let base64Image4 = file4 ? await toBase64(file4) : "";
 
       data4 = {
-        // ACADEMIC QUALIFICATION
         ResultQualification: base64Image,
         Certificate_completion_studies_file: base64Image2,
         chsi: base64Image3,
         cscse: base64Image4,
-
         institution_name: document.getElementById("institution_name").value,
         highest_qualification: document.getElementById("H_Qualification").value,
         institution_country: document.getElementById("Institution_country")
@@ -1290,7 +1267,6 @@
       if (file2) {
         base64Image2 = await toBase64(file2);
       }
-
       data5 = {
         // SECONDARY
         graduatesecondry: base64Image,
@@ -1324,40 +1300,26 @@
         english_score: document.getElementById("englishscore").value,
         english_test_date: document.getElementById("english_test_date").value,
       };
-    }
-    if (tabIndex === 6) {
+    } else if (tabIndex === 6) {
       const fileInput = document.getElementById("Passport_FPage");
       const file = fileInput ? fileInput.files[0] : null;
       let base64Image = "";
-
       if (file) {
-        // Optional: Validate file type and size
-        if (file.type !== "application/pdf") {
-          alert("Only PDF files are allowed.");
-          return false; // <- fix: stop submission
-        }
-        if (file.size > 5 * 1024 * 1024) {
-          alert("PDF file size must be less than 5MB.");
-          return false; // <- fix: stop submission
-        }
-
-        try {
-          base64Image = await toBase64(file);
-        } catch (e) {
-          alert("Failed to read passport file.");
-          return false;
-        }
+        base64Image = await toBase64(file);
       }
 
       data7 = {
+        // VISA INFORMATION
         Passport_FPage: base64Image,
         require_visa:
-          document.querySelector('input[name="requireVisa"]:checked')?.value ||
+          document.querySelector('input[name="requireVisa"]:checked').value ||
           null,
         visa_type:
-          document.querySelector('input[name="visaType"]:checked')?.value ||
+          document.querySelector('input[name="visaType"]:checked').value ||
           null,
+        // visa_expiry: document.getElementById("visa_expiry").value,
         passport_expiry: document.getElementById("passport_expiry").value,
+        // Passport_FPage: base64Image,
       };
     } else if (tabIndex === 7) {
       const fileInput = document.getElementById("Healthdeclare_file");
@@ -1398,7 +1360,7 @@
         father_phone: document.getElementById("ContactFather").value,
         father_occupation: document.getElementById("Father_Occupation").value,
         mother_occupation: document.getElementById("Mother_Occupation").value,
-        mother_phone: document.getElementById("Mother_Phone").value,
+        mother_name: document.getElementById("Mother_Phone").value,
         // parents_income: base64Image,
       };
     } else if (tabIndex === 9) {
@@ -1409,15 +1371,17 @@
         base64Image = await toBase64(file);
       }
 
-      data10 = {
+      data9 = {
+        // PAYMENT RECEIPT
         payment_receipt_file: base64Image,
       };
     } else if (tabIndex === 10) {
       const checkbox = document.getElementById("declarationCheck");
       const isChecked = checkbox.checked;
+      data10 = {
+        // DECLARATION
 
-      data11 = {
-        declaration_checked: isChecked,
+        declaration_signature: isChecked,
         declaration_date: document.getElementById("datesign").value,
         declaration_signature: document.getElementById("sign_parents").value,
       };

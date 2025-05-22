@@ -662,16 +662,5 @@ if (nationalitySelect && nonMalaysianInput) {
     }
   });
 }
-// Handle ENGLISH PROF  select toggle (if on the page)
-const englishTestSelect = document.getElementById("nationality");
-const englishTestInput = document.getElementById("english_test_other");
-if (nationalitySelect && nonMalaysianInput) {
-  nationalitySelect.addEventListener("change", function () {
-    if (this.value === "englishTest") {
-      nonMalaysianInput.style.display = "block";
-    } else {
-      nonMalaysianInput.style.display = "none";
-    }
-  });
-}
+
 document.addEventListener("DOMContentLoaded", fetchApplicationStudent);

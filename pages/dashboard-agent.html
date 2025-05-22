@@ -65,7 +65,7 @@
           <li class="nav-item">
             <a
               class="nav-link text-dark active bg-gradient-dark text-white sidebar-link dashboard-link"
-              onclick="loadPage('home-agent', this)"
+              onclick="loadPage('home', this)"
             >
               <i class="material-symbols-rounded opacity-5">dashboard</i>
               <span class="nav-link-text ms-1">Dashboard</span>
@@ -79,26 +79,35 @@
               Account pages
             </h6>
           </li>
-
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a
               class="nav-link text-dark profile-link"
-              href="../pages/user-profile.html"
+              onclick="loadPage('home', this)"
+            >
+              <i class="material-symbols-rounded opacity-5">person</i>
+              <span class="nav-link-text ms-1">Home</span>
+            </a>
+          </li> -->
+          <li class="nav-item">
+            <a
+              class="nav-link text-dark create-agent-link"
+              href="/pages/agent/new-application.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
-              <span class="nav-link-text ms-1">View agent profile</span>
+              <span class="nav-link-text ms-1">Create new application</span>
             </a>
           </li>
           <li class="nav-item">
             <a
               class="nav-link text-dark create-agent-link"
-              href="../pages/new-application.html"
+              href="/pages/agent/user-profile.html"
             >
               <i class="material-symbols-rounded opacity-5">assignment</i>
-              <span class="nav-link-text ms-1">Add New Application</span>
+              <span class="nav-link-text ms-1">View agent profile</span>
             </a>
           </li>
-          <li class="nav-item">
+
+          <!-- <li class="nav-item">
             <a
               class="nav-link text-dark create-agent-link"
               onclick="loadPage('receipt', this)"
@@ -106,7 +115,7 @@
               <i class="material-symbols-rounded opacity-5">assignment</i>
               <span class="nav-link-text ms-1">Receipt Payment</span>
             </a>
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="sidenav-footer position-absolute w-100 bottom-0">
@@ -158,7 +167,63 @@
         </div>
         <!-- content -->
         <div class="row mb-4">
-          <div id="content"></div>
+          <div id="content">
+            <div class="card">
+              <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-20"
+                        style="width: 5%"
+                      >
+                        No
+                      </th>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-20 ps-2"
+                      >
+                        Student Name
+                      </th>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-20 ps-2"
+                      >
+                        Status
+                      </th>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-20 ps-2"
+                      >
+                        Receipt
+                      </th>
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-20 ps-2"
+                      >
+                        Remark
+                      </th>
+
+                      <th
+                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-20 ps-2"
+                      >
+                        Files
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- No students found, add this row -->
+                    <tr>
+                      <td colspan="3" class="text-center text-sm text-muted">
+                        No student found
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" class="text-center text-sm text-muted">
+                        Approval
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -168,58 +233,18 @@
     <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
     <script src="../assets/js/plugins/chartjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
-    <!-- profile -->
 
-    <script>
-      fetch("agent/student-list-status.html")
-        .then((response) => response.text())
-        .then((html) => {
-          const contentDiv = document.getElementById("content");
-
-          // Create a temporary container
-          const temp = document.createElement("div");
-          temp.innerHTML = html;
-
-          // Move everything into the target div
-          while (temp.firstChild) {
-            const child = temp.firstChild;
-            // If it's a script, re-insert to run it
-            if (child.tagName === "SCRIPT") {
-              const newScript = document.createElement("script");
-              if (child.src) {
-                newScript.src = child.src;
-              } else {
-                newScript.textContent = child.textContent;
-              }
-              document.body.appendChild(newScript);
-              temp.removeChild(child);
-            } else {
-              contentDiv.appendChild(child);
-            }
-          }
-        })
-        .catch((error) => console.error("Error loading external HTML:", error));
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        console.log("test");
-        const storedLoginDetail = JSON.parse(
-          sessionStorage.getItem("loginDetail")
-        );
-        console.log("test", storedLoginDetail);
-        if (storedLoginDetail) {
-          document.getElementById("userFullName").innerText =
-            storedLoginDetail.full_name;
-        }
-      });
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="../assets/js/db/connection.js"></script>
+
     <script src="../assets/js/db/fetchStudentList.js"></script>
     <script src="../assets/js/db/logout.js"></script>
   </body>
