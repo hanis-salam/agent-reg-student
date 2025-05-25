@@ -316,16 +316,16 @@
           <div class="card p-4">
             <!-- Program Applied For -->
             <div class="col-md-6 mb-3">
-              <label for="programstatus"> Program Applied For </label>
+              <label for="programstatus">Program Applied For</label>
               <select
                 class="form-control"
                 id="programstatus"
                 onchange="handleProgramChange()"
               >
-                <option disabled="" selected="" value="">
+                <option disabled selected value="">
                   Select Program Status
                 </option>
-                <option disabled="" value="diploma">Diploma</option>
+                <option disabled value="diploma">Diploma</option>
                 <option value="degree">Bachelor's Degree</option>
                 <option value="mastercoursework">Master's (Coursework)</option>
                 <option value="masterresearch">Master's (Research)</option>
@@ -333,15 +333,16 @@
                 <option value="others">Others</option>
               </select>
             </div>
-            <!-- Bachelor's Degree: Dropdown -->
+
+            <!-- Degree: Dropdown -->
             <div
               class="col-md-6 mb-3"
               id="programNameDiv"
               style="display: none"
             >
-              <label for="program_name"> Program </label>
+              <label for="program_name">Program</label>
               <select class="form-control" id="program_name">
-                <option disabled="" selected="" value="">Select Program</option>
+                <option disabled selected value="">Select Program</option>
                 <option value="bib">
                   Bachelor of Business (International Business) with Honours
                 </option>
@@ -356,13 +357,14 @@
                 </option>
               </select>
             </div>
-            <!-- Master's, PhD, Others: Input -->
+
+            <!-- Master's / PhD / Others: Input -->
             <div
               class="col-md-6 mb-3"
               id="customProgramDiv"
               style="display: none"
             >
-              <label for="custom_program"> Specify Your Program </label>
+              <label for="custom_program">Specify Your Program</label>
               <input
                 class="form-control"
                 id="custom_program"
@@ -371,34 +373,37 @@
                 value="-"
               />
             </div>
+
+            <!-- Mode of Study -->
             <div class="col-md-6 mb-3">
-              <label class="form-label d-block"> Mode of Study </label>
-              <div class="form-check form-check-inline" id="Mode_Study">
+              <label class="form-label d-block">Mode of Study</label>
+              <div class="form-check form-check-inline">
                 <input
-                  checked=""
                   class="form-check-input"
                   name="studyMode"
                   type="radio"
                   value="Full-Time"
+                  checked
                 />
-                <label class="form-check-label"> Full-Time </label>
+                <label class="form-check-label">Full-Time</label>
               </div>
               <div class="form-check form-check-inline">
                 <input
                   class="form-check-input"
-                  disabled=""
                   name="studyMode"
                   type="radio"
                   value="Part-Time"
+                  disabled
                 />
-                <label class="form-check-label"> Part-Time </label>
+                <label class="form-check-label">Part-Time</label>
               </div>
             </div>
-            <!--Intake Year -->
+
+            <!-- Intake Year -->
             <div class="col-md-6 mb-3">
-              <label for="Intake"> Intake </label>
+              <label for="Intakeyear">Intake</label>
               <select class="form-control" id="Intakeyear">
-                <option disabled="" selected="" value="">Select Year</option>
+                <option disabled selected value="">Select Year</option>
                 <option value="2023">2023</option>
                 <option value="2024">2024</option>
                 <option value="2025">2025</option>
@@ -407,19 +412,20 @@
                 <option value="2028">2028</option>
                 <option value="2029">2029</option>
                 <option value="2030">2030</option>
-                <!-- Add more countries as needed -->
               </select>
             </div>
+
+            <!-- Semester -->
             <div class="col-md-6 mb-3">
-              <label class="form-label d-block"> Semester </label>
-              <div class="form-check form-check-inline" id="semester">
+              <label class="form-label d-block">Semester</label>
+              <div class="form-check form-check-inline">
                 <input
                   class="form-check-input"
                   name="semester"
                   type="radio"
                   value="March"
                 />
-                <label class="form-check-label"> March </label>
+                <label class="form-check-label">March</label>
               </div>
               <div class="form-check form-check-inline">
                 <input
@@ -428,11 +434,12 @@
                   type="radio"
                   value="October"
                 />
-                <label class="form-check-label"> October </label>
+                <label class="form-check-label">October</label>
               </div>
             </div>
           </div>
         </div>
+
         <!-- Step 4 -->
         <div class="tab">
           <div class="card p-4">
@@ -522,7 +529,7 @@
                 <input
                   accept=".jpg, .jpeg, .png"
                   class="form-control-file"
-                  id="cshse"
+                  id="cscse"
                   type="file"
                 />
               </div>
@@ -1087,7 +1094,8 @@
     data7,
     data8,
     data9,
-    data10 = {};
+    data10,
+    data11 = {};
 
   function showTab(n) {
     var x = document.getElementsByClassName("tab");
@@ -1106,9 +1114,6 @@
   }
 
   async function nextPrev(n) {
-    console.log("test1", data1);
-    console.log("test2", data2);
-    console.log("test3", data3);
     var x = document.getElementsByClassName("tab");
 
     // Exit if invalid
@@ -1146,6 +1151,7 @@
         ...data8,
         ...data9,
         ...data10,
+        ...data11,
         ...formData,
       };
 
@@ -1220,16 +1226,21 @@
         permanent_state: document.getElementById("P_state").value,
         alternate_phone_number: document.getElementById("P_different_no").value,
       };
-    } else if (tabIndex === 2) {
+    }
+    if (tabIndex === 2) {
+      const programStatus = document.getElementById("programstatus").value;
+      const programName =
+        programStatus === "degree"
+          ? document.getElementById("program_name").value
+          : document.getElementById("custom_program").value;
+
       data3 = {
-        // PROGRAM INFORMATION
-        program_status: document.getElementById("programstatus").value,
-        program_name: document.getElementById("program_name").value,
-        // study_mode: document.getElementById("Mode_Study").value,
+        program_status: programStatus,
+        program_name: programName || "-",
         study_mode: "Full-Time",
         intake_year: document.getElementById("Intakeyear").value,
         intake_semester:
-          document.querySelector('input[name="semester"]:checked').value ||
+          document.querySelector('input[name="semester"]:checked')?.value ||
           null,
       };
     } else if (tabIndex === 3) {
@@ -1251,6 +1262,7 @@
 
       const fileInput3 = document.getElementById("chsi");
       const file3 = fileInput3 ? fileInput3.files[0] : null;
+      cscse;
       let base64Image3 = "";
       if (file3) {
         base64Image3 = await toBase64(file3);
@@ -1417,6 +1429,7 @@
       const isChecked = checkbox.checked;
 
       data11 = {
+        // DECLARATION
         declaration_checked: isChecked,
         declaration_date: document.getElementById("datesign").value,
         declaration_signature: document.getElementById("sign_parents").value,
@@ -1430,10 +1443,23 @@
       valid = true;
     x = document.getElementsByClassName("tab");
     y = x[currentTab].getElementsByTagName("input");
+
     for (i = 0; i < y.length; i++) {
       if (y[i].value == "") {
-        y[i].className += " is-invalid";
-        valid = false;
+        if (y[i].id === "cscse") {
+          return valid;
+        } else if (y[i].id === "chsi") {
+          return valid;
+        } else if (y[i].value == "english_result_file") {
+          return valid;
+        } else if (y[i].value == "Cert_sec_stud") {
+          return valid;
+        } else if (y[i].value == "graduatesecondry") {
+          return valid;
+        } else {
+          y[i].className += " is-invalid";
+          valid = false;
+        }
       } else {
         y[i].className = y[i].className.replace(" is-invalid", "");
       }
@@ -1472,6 +1498,7 @@
     if (selected === "degree") {
       programNameDiv.style.display = "block";
       customProgramDiv.style.display = "none";
+      programSelect.value = "";
       customInput.value = "-";
     } else if (
       ["mastercoursework", "masterresearch", "phd", "others"].includes(selected)
@@ -1484,10 +1511,11 @@
       programNameDiv.style.display = "none";
       customProgramDiv.style.display = "none";
       programSelect.value = "";
-      customInput.value = "";
+      customInput.value = "-";
     }
   }
 </script>
+
 <script>
   document
     .getElementById("nationality")

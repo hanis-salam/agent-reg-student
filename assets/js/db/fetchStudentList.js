@@ -45,11 +45,10 @@ async function fetchStudentNames() {
     )}</span></td>
     `;
 
-    // Receipt upload column before remark
     const receiptTd = document.createElement("td");
     receiptTd.className = "text-sm text-center";
 
-    if (status && status.toLowerCase() === "pre_approved") {
+    if (status && status.toLowerCase() === "pre_approved,") {
       const group = document.createElement("div");
       group.className = "file-group d-flex align-items-center gap-2 w-100";
 
@@ -71,33 +70,54 @@ async function fetchStudentNames() {
     }
     row.appendChild(receiptTd);
 
-    // Remark column
     const remarkTd = document.createElement("td");
     remarkTd.className = "text-sm text-left";
     remarkTd.innerText = remark;
     row.appendChild(remarkTd);
 
-    // Files column with download icon
+    const offerLetterTd = document.createElement("td");
+    offerLetterTd.className = "text-sm text-center";
+
+    const hasOfferZip =
+      status &&
+      ["pre_approved", "approved"].includes(status.toLowerCase()) &&
+      student.offer_letter_url;
+
+    if (hasOfferZip) {
+      offerLetterTd.innerHTML = `
+        <span class="material-symbols-rounded download-offer" style="font-size:24px; cursor:pointer;"
+          data-id="${student.id}"
+          data-offer="${student.offer_letter_url}"
+          title="Download Offer Letter ZIP">
+          download
+        </span>
+      `;
+    } else {
+      offerLetterTd.innerHTML = `<span class="text-muted">-</span>`;
+    }
+    row.appendChild(offerLetterTd);
+
     const filesTd = document.createElement("td");
     filesTd.className = "text-sm text-center";
-    const hasFiles =
-      student.offer_letter_url && student.emgs_url && student.eval_url;
+    const hasEMGSAndEval =
+      status &&
+      status.toLowerCase() === "approved" &&
+      student.emgs_url &&
+      student.eval_url;
 
-    if (hasFiles) {
+    if (hasEMGSAndEval) {
       filesTd.innerHTML = `
         <span class="material-symbols-rounded download-icon" style="font-size:24px; cursor:pointer;" 
           data-id="${student.id}"
-          data-offer="${student.offer_letter_url}" 
           data-emgs="${student.emgs_url}" 
           data-eval="${student.eval_url}" 
-          title="Download files">
-          download
+          title="Download EMGS and EVAL">
+          folder_zip
         </span>
       `;
     } else {
       filesTd.innerHTML = `<span class="text-muted">-</span>`;
     }
-
     row.appendChild(filesTd);
 
     fragment.appendChild(row);
@@ -106,11 +126,9 @@ async function fetchStudentNames() {
   tbody.appendChild(fragment);
 }
 
-// Upload & download handler
 document.addEventListener("click", async (e) => {
   const target = e.target;
 
-  // Handle receipt upload
   if (target.classList.contains("upload-receipt-icon")) {
     const parent = target.closest(".file-group");
     const input = parent.querySelector(".receipt-input");
@@ -128,7 +146,6 @@ document.addEventListener("click", async (e) => {
     reader.onload = async () => {
       const base64String = reader.result;
 
-      // Upload receipt and update status to 'pre_processing'
       const { error } = await supabase
         .from("student_applications")
         .update({
@@ -143,7 +160,6 @@ document.addEventListener("click", async (e) => {
         return;
       }
 
-      // Show preview and reload data
       preview.src = base64String;
       preview.style.display = "inline-block";
       alert("✅ Receipt uploaded. Status updated to 'pre_processing'.");
@@ -153,25 +169,44 @@ document.addEventListener("click", async (e) => {
     reader.readAsDataURL(file);
   }
 
-  // Handle file download
   if (target.classList.contains("download-icon")) {
     const id = target.dataset.id;
     const photo = await getImageDetail(id);
     if (photo) generatePDFimg(photo);
     return;
   }
+
+  if (target.classList.contains("download-offer")) {
+    const base64 = target.dataset.offer;
+    const studentId = target.dataset.id;
+
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "application/zip" });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `offer_letter_${studentId}.zip`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 });
 
 async function getImageDetail(studentId) {
   const { data, error } = await window.supabase
     .from("student_applications")
-    .select("offer_letter_url, emgs_url, eval_url")
+    .select("emgs_url, eval_url")
     .eq("id", studentId)
     .single();
 
   if (error) {
     console.error("Error fetching student letter:", error.message);
-    alert("\u274C Error fetching student letter.");
+    alert("❌ Error fetching student letter.");
     return null;
   }
   return data;
@@ -182,7 +217,6 @@ function generatePDFimg(photo) {
   const doc = new jsPDF();
 
   const imageFields = [
-    { key: "offer_letter_url", label: "" },
     { key: "emgs_url", label: "" },
     { key: "eval_url", label: "" },
   ];
@@ -209,7 +243,6 @@ function generatePDFimg(photo) {
   doc.save("Letter_Application.pdf");
 }
 
-// Status badge class
 function getStatusBadgeClass(status) {
   switch (status.toLowerCase()) {
     case "approved":

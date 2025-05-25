@@ -20,7 +20,7 @@ async function fetchApplicationStudent() {
   const { data, error } = await window.supabase
     .from("student_applications")
     .select(
-      "id, register_by, full_name, status, remark, profile_photo,finalStatus"
+      "id, register_by, full_name, status, remark, profile_photo,finalStatus,OfferLetterStatus"
     );
 
   if (error) {
@@ -34,13 +34,10 @@ async function fetchApplicationStudent() {
   data.forEach((application, index) => {
     const status = application.status ?? "new";
     const remark = application.remark ?? "";
-    let downloadLetter = "Letter's already submit.";
-    if (application.finalStatus === false) {
-      downloadLetter = `<div id="upload-container-${application.id}" style="display: flex; flex-direction: column; gap: 10px; padding: 8px; max-width: 220px;">
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        <label for="upload1-${application.id}" style="font-size: 0.8rem;">Offer Letter</label>
-        <input type="file" accept="image/*" id="upload1-${application.id}" class="form-control form-control-sm" />
-      </div>
+    let downloadOtherLetter = "Letter's already submit.";
+    let downloadOfferLetter = "Offer Letter's already submit.";
+    if (!application.finalStatus) {
+      downloadOtherLetter = `<div id="upload-container-${application.id}" style="display: flex; flex-direction: column; gap: 10px; padding: 8px; max-width: 220px;">
       <div style="display: flex; flex-direction: column; gap: 6px;">
         <label for="upload2-${application.id}" style="font-size: 0.8rem;">EMGS</label>
         <input type="file" accept="image/*" id="upload2-${application.id}" class="form-control form-control-sm" />
@@ -50,6 +47,15 @@ async function fetchApplicationStudent() {
         <input type="file" accept="image/*" id="upload3-${application.id}" class="form-control form-control-sm" />
       </div>
       <button class="submit-btn btn btn-sm btn-success mt-2" type="button" data-id="${application.id}" style="align-self: start; padding: 4px 12px;">Submit</button>
+    </div>`;
+    }
+    if (!application.OfferLetterStatus) {
+      downloadOfferLetter = `<div id="upload-container-${application.id}" style="display: flex; flex-direction: column; gap: 10px; padding: 8px; max-width: 220px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="upload2-${application.id}" style="font-size: 0.8rem;">Offer Letter</label>
+        <input type="file" accept=".zip" id="upload-zip-${application.id}" class="form-control form-control-sm" />
+      </div>
+      <button class="submit-uploadZip btn btn-sm btn-success mt-2" type="button" data-id="${application.id}" style="align-self: start; padding: 4px 12px;">Submit</button>
     </div>`;
     }
 
@@ -108,10 +114,10 @@ async function fetchApplicationStudent() {
   </td>
 
   <td class="align-middle" style="min-width: 220px;">
-    ${downloadLetter}
+    ${downloadOfferLetter}
   </td>
   <td class="align-middle" style="min-width: 220px;"> 
-    ${downloadLetter}
+    ${downloadOtherLetter}
   </td>
   <td class="text-center align-middle" style="width: 90px;">
     <i class="material-symbols-rounded text-black download-icon full-pdf me-2" data-id="${
@@ -157,6 +163,13 @@ async function fetchApplicationStudent() {
       return;
     }
 
+    // **File Upload Submit Button**
+    if (target.classList.contains("submit-uploadZip")) {
+      const id = target.dataset.id;
+      await uploadZip(id); // Call upload function with student ID
+      return;
+    }
+
     // Download full PDF
     if (target.classList.contains("full-pdf")) {
       const id = target.dataset.id;
@@ -182,159 +195,41 @@ async function fetchApplicationStudent() {
     }
   });
   //handle filter for Pre_Processing
-  document
-    .getElementById("showPreProcessing")
-    .addEventListener("click", async () => {
-      const { data, error } = await window.supabase
+  document;
+
+  // Handle status change event on tbody
+  tbody.addEventListener("change", async (e) => {
+    const target = e.target;
+    if (target.classList.contains("status-select")) {
+      const id = target.dataset.id;
+      const newStatus = target.value;
+
+      const { error } = await window.supabase
         .from("student_applications")
-        .select("id, register_by, full_name, status, remark, profile_photo")
-        .eq("status", "Pre_Processing");
+        .update({ status: newStatus })
+        .eq("id", id);
+
       if (error) {
-        console.error("Error fetching student applications:", error.message);
-        return;
+        console.error("Error updating status:", error.message);
+        alert("Failed to update status.");
+      } else {
+        alert("Status updated to: " + newStatus);
+
+        // Update color classes
+        const allClasses = [
+          "bg-success",
+          "bg-warning",
+          "bg-primary",
+          "bg-danger",
+          "text-white",
+          "text-dark",
+        ];
+        target.classList.remove(...allClasses);
+        target.classList.add(...getStatusClass(newStatus).split(" "));
       }
-
-      const tbody = document.querySelector("tbody");
-      tbody.innerHTML = "";
-
-      data.forEach((application, index) => {
-        const status = application.status ?? "new";
-        const remark = application.remark ?? "";
-
-        const row = `
-      <tr data-id="${application.id}">
-        <td class="text-sm text-center">${index + 1}</td>
-        <td><h6 class="mb-0 text-sm">${application.register_by}</h6></td>
-        <td><h6 class="mb-0 text-sm student-name" data-id="${application.id}">${
-          application.full_name
-        }</h6></td>
-        <td>
-          <select class="form-select form-select-sm text-xs status-select ${getStatusClass(
-            status
-          )}" data-id="${application.id}">
-            ${[
-              "New",
-              "Processing",
-              "Pre_approved",
-              "Pre_Processing",
-              "Approved",
-              "Rejected",
-            ]
-              .map(
-                (s) =>
-                  `<option value="${s}" ${
-                    status.toLowerCase() === s.toLowerCase() ? "selected" : ""
-                  }>${s.replace("_", " ")}</option>`
-              )
-              .join("")}
-          </select>
-        </td>
-        <td class="text-sm text-center">
-          <div class="d-flex align-items-left gap-2">
-            <input type="text" class="form-control form-control-sm remark-input" data-id="${
-              application.id
-            }" value="${remark}" placeholder="Enter remark"/>
-            <button class="btn btn-sm btn-warning update-remark" style="background-color: #28a745; align-items: center; justify-content: center; padding: 0.25rem 0.75rem; line-height: 1.25;" data-id="${
-              application.id
-            }">Update</button>
-          </div>
-        </td>
-        <td>
-        <div>
-        test
-        </div>
-        </td>
-        <td class="text-sm text-center">
-          <div class="upload-section d-flex flex-column gap-2 align-items-start">
-            <div class="file-group d-flex align-items-center gap-2 w-100">
-              <input type="file" class="form-control form-control-sm file-input" data-id="${
-                application.id
-              }" />
-              <span class="material-symbols-rounded text-success upload-file-icon" data-id="${
-                application.id
-              }" style="font-size: 24px; cursor: pointer;">upload</span>
-              <button class="btn btn-sm p-1 add-file-btn" data-id="${
-                application.id
-              }" title="Add File" style="border: none; background: transparent;">
-                <span class="material-symbols-rounded" style="font-size: 20px; color: #007bff; cursor: pointer;">add</span>
-              </button>
-            </div>
-          </div>
-        </td>
-        <td class="text-sm text-center">
-          <i class="material-symbols-rounded text-black download-icon full-pdf" data-id="${
-            application.id
-          }" style="cursor:pointer;">download</i>
-          <i class="material-symbols-rounded text-black download-icon image-student" data-id="${
-            application.id
-          }" style="cursor:pointer;">image</i>
-        </td>
-      </tr>`;
-
-        tbody.innerHTML += row;
-      });
-    });
-  renderPaginationControls();
-}
-
-function renderPaginationControls() {
-  let paginationDiv = document.getElementById("pagination");
-  if (!paginationDiv) {
-    paginationDiv = document.createElement("div");
-    paginationDiv.id = "pagination";
-    paginationDiv.className =
-      "d-flex justify-content-between align-items-center mt-3 px-3";
-    document.querySelector(".table-responsive").appendChild(paginationDiv);
-  }
-
-  const totalPages = Math.ceil(currentData.length / rowsPerPage);
-
-  paginationDiv.innerHTML = `
-  <button class="btn btn-sm btn-secondary" ${
-    currentPage === 1 ? "disabled" : ""
-  } onclick="changePage(-1)">
-    Previous
-  </button>
-  <span class="text-sm">Page ${currentPage} of ${totalPages}</span>
-  <button class="btn btn-sm btn-secondary" ${
-    currentPage === totalPages ? "disabled" : ""
-  } onclick="changePage(1)">
-    Next
-  </button>
-`;
-}
-// Handle status change event on tbody
-tbody.addEventListener("change", async (e) => {
-  const target = e.target;
-  if (target.classList.contains("status-select")) {
-    const id = target.dataset.id;
-    const newStatus = target.value;
-
-    const { error } = await window.supabase
-      .from("student_applications")
-      .update({ status: newStatus })
-      .eq("id", id);
-
-    if (error) {
-      console.error("Error updating status:", error.message);
-      alert("Failed to update status.");
-    } else {
-      alert("Status updated to: " + newStatus);
-
-      // Update color classes
-      const allClasses = [
-        "bg-success",
-        "bg-warning",
-        "bg-primary",
-        "bg-danger",
-        "text-white",
-        "text-dark",
-      ];
-      target.classList.remove(...allClasses);
-      target.classList.add(...getStatusClass(newStatus).split(" "));
     }
-  }
-});
+  });
+}
 
 function toBase64(file) {
   return new Promise((resolve, reject) => {
@@ -390,6 +285,36 @@ async function handleFileUpload(studentId) {
   return;
 }
 
+async function uploadZip(studentId) {
+  const fileInput = document.getElementById("upload-zip-" + studentId);
+  const file = fileInput.files[0];
+  if (!file) return alert("Please select a ZIP file");
+
+  const reader = new FileReader();
+
+  reader.onload = async function (event) {
+    const base64String = event.target.result.split(",")[1]; // remove prefix
+
+    const { data, error } = await window.supabase
+      .from("student_applications") // change to your table name
+      .update({
+        offer_letter_url: base64String,
+        OfferLetterStatus: true,
+      })
+      .eq("id", studentId);
+
+    if (error) {
+      console.error("Upload error:", error);
+      alert("Upload failed");
+    } else {
+      alert("File uploaded successfully");
+      location.reload();
+    }
+  };
+
+  reader.readAsDataURL(file); // this will give base64 with MIME prefix
+}
+
 async function getReceiptDetail(studentId) {
   const { data, error } = await window.supabase
     .from("student_applications")
@@ -406,26 +331,59 @@ async function getReceiptDetail(studentId) {
 }
 
 async function getStudentDetails(studentId) {
-  const { data, error } = await window.supabase
-    .from("student_applications")
-    .select("offer_letter_url, emgs_url, eval_url")
-    .eq("id", studentId)
-    .single();
+  try {
+    if (!studentId) {
+      alert("Invalid student ID");
+      return null;
+    }
 
-  if (error) {
-    console.error("Error fetching student details:", error.message);
-    alert("\u274C Error fetching student details.");
+    console.log("Fetching student details for ID:", studentId);
+
+    const { data, error } = await window.supabase
+      .from("student_applications")
+      .select(
+        `
+        full_name, gender, date_of_birth, nationality, nonMalaysianInput,
+        race, religion, ic_or_passport, email, birth_place, contact_number,
+        emergency_contact_name, emergency_contact_number,
+        permanent_address, permanent_postcode, permanent_city, permanent_state,
+        program_status, program_name, study_mode, intake_year, intake_semester,
+        highest_qualification, institution_name, institution_country, year_gradschool, graduation_year,
+        secondary_name, secondary_address, secondary_qualification,
+        english_test, english_test_date, english_score, english_test_other,
+        require_visa, visa_type, passport_expiry, specifycondition, specifycurrent, current_medication, medicalConditions, father_name, father_occupation, father_phone, mother_name, mother_occupation, mother_phone, declaration_date, declaration_signature, parent_declaration_date, 
+        offer_letter_url, emgs_url, eval_url
+      `
+      )
+      .eq("id", studentId)
+      .single();
+
+    if (error) {
+      console.error("❌ Supabase error fetching student details:", error);
+      alert("Error fetching student details.");
+      return null;
+    }
+
+    if (!data) {
+      alert("No student found with the given ID.");
+      return null;
+    }
+
+    console.log("Fetched student details:", data);
+    return data;
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    alert("Unexpected error fetching student details.");
     return null;
   }
-
-  return data;
 }
+
 //DOWNLOAD FILE
 async function getImageDetail(studentId) {
   const { data, error } = await window.supabase
     .from("student_applications")
     .select(
-      "profile_photo, ResultQualification, english_result_file, Passport_FPage, payment_receipt_file, graduatesecondry, Cert_sec_stud, Healthdeclare_file, Certificate_completion_studies, Certificate_completion_studies_file"
+      "profile_photo, ResultQualification, Certificate_completion_studies_file, chsi, cscse, english_result_file, payment_receipt_file, graduatesecondry, Cert_sec_stud, Healthdeclare_file"
     )
     .eq("id", studentId)
     .single();
@@ -437,7 +395,6 @@ async function getImageDetail(studentId) {
   }
   return data;
 }
-//STUDENT APPLICATION DOWNLOAD PDF
 function generatePDF(student) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -553,7 +510,7 @@ function generatePDF(student) {
         student.require_visa,
       ],
       ["Type of Visa", student.visa_type],
-      ["Visa Expiry Date", student.visa_expiry],
+      // ["Visa Expiry Date", student.visa_expiry],
       ["Passport Expiry Date", student.passport_expiry],
 
       [
@@ -610,19 +567,20 @@ function generatePDFimg(photo) {
   const doc = new jsPDF();
 
   const imageFields = [
-    { key: "profile_photo", label: "Profile Photo" },
-    { key: "ResultQualification", label: "Qualification Result" },
+    { key: "profile_photo", label: "Passport Photo" },
+    { key: "ResultQualification", label: "Academic Transcript" },
+    {
+      key: "Certificate_completion_studies_file",
+      label: "Academic Graduation Results",
+    },
     { key: "english_result_file", label: "English Result" },
-    { key: "Passport_FPage", label: "Passport Front Page" },
+    { key: "chsi", label: "CHSI" },
+    { key: "cscse", label: "CSCSE" },
+    // { key: "Passport_FPage", label: "Passport Front Page" },
     { key: "payment_receipt_file", label: "Payment Receipt" },
     { key: "graduatesecondry", label: "Graduate Secondary Cert" },
     { key: "Cert_sec_stud", label: "Certificate of Secondary Studies" },
     { key: "Healthdeclare_file", label: "Health Declaration" },
-    {
-      key: "Certificate_completion_studies",
-      label: "Certificate of Completion",
-    },
-    { key: "Certificate_completion_studies_file", label: "Completion File" },
   ];
 
   const pageWidth = doc.internal.pageSize.getWidth();

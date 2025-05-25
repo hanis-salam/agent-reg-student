@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <style>
+      table.table-hover tbody tr:hover {
+        background-color: #f0f8ff;
+        transition: background-color 0.3s ease;
+      }
+    </style>
+
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -156,87 +163,84 @@
         </div>
       </nav>
       <!-- End Navbar -->
-      <div class="container-fluid py-2">
-        <div class="row mb-4">
-          <div class="ms-3">
-            <h3 class="mb-0 h4 font-weight-bolder">Dashboard</h3>
-          </div>
-        </div>
-        <!-- content -->
-        <div class="row mb-4">
-          <div id="content">
-            <div class="card">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder"
-                        style="width: 5%"
-                      >
-                        No
-                      </th>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
-                      >
-                        Username
-                      </th>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
-                      >
-                        Email
-                      </th>
-
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
-                      >
-                        Agent Name
-                      </th>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
-                      >
-                        Contact No.
-                      </th>
-
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
-                      >
-                        Address
-                      </th>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
-                      >
-                        Company Name
-                      </th>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
-                      >
-                        Company Id
-                      </th>
-
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
-                      >
-                        Status
-                      </th>
-
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
-                      >
-                        Remark
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- No students found, add this row -->
-                    <!-- <tr>
-                      <td colspan="3" class="text-center text-sm text-muted">
-                        No student found
-                      </td>
-                    </tr> -->
-                  </tbody>
-                </table>
-              </div>
+      <!-- content -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="card shadow-sm border-0">
+            <div
+              class="card-header pb-3 d-flex justify-content-between align-items-center"
+            >
+              <h4 class="mb-0">LIST OF AGENTS</h4>
+              <input
+                type="text"
+                id="agentFilter"
+                placeholder="Search by username..."
+                class="form-control w-auto ms-auto"
+                style="max-width: 250px"
+              />
+            </div>
+            <div class="table-responsive">
+              <table
+                class="table table-hover table-striped align-items-center mb-0"
+              >
+                <thead class="bg-light">
+                  <tr>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder text-center"
+                    >
+                      No
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder"
+                    >
+                      Username
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder"
+                    >
+                      Email
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder"
+                    >
+                      Agent Name
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder"
+                    >
+                      Contact No.
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder"
+                    >
+                      Address
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder"
+                    >
+                      Company Name
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder"
+                    >
+                      Company ID
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xs font-weight-bolder"
+                    >
+                      Remark
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                  <!-- Dynamic rows injected here -->
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

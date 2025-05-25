@@ -16,11 +16,37 @@ function getStatusClass(status) {
   }
 }
 
+function filterApplications() {
+  const statusFilter = document
+    .getElementById("statusFilter")
+    .value.toLowerCase();
+  const searchInput = document
+    .getElementById("searchInput")
+    .value.toLowerCase()
+    .trim();
+
+  const rows = document.querySelectorAll("tbody tr");
+
+  rows.forEach((row) => {
+    const statusSelect = row.querySelector(".status-select");
+    const rowStatus = statusSelect ? statusSelect.value.toLowerCase() : "";
+    const studentNameEl = row.querySelector(".student-name");
+    const studentName = studentNameEl
+      ? studentNameEl.textContent.toLowerCase()
+      : "";
+
+    const statusMatch = statusFilter === "all" || rowStatus === statusFilter;
+    const nameMatch = studentName.includes(searchInput);
+
+    row.style.display = statusMatch && nameMatch ? "" : "none";
+  });
+}
+
 async function fetchApplicationStudent() {
   const { data, error } = await window.supabase
     .from("student_applications")
     .select(
-      "id, register_by, full_name, status, remark, profile_photo,finalStatus"
+      "id, register_by, full_name, status, remark, profile_photo, finalStatus, OfferLetterStatus, Passport_FPage"
     );
 
   if (error) {
@@ -34,13 +60,10 @@ async function fetchApplicationStudent() {
   data.forEach((application, index) => {
     const status = application.status ?? "new";
     const remark = application.remark ?? "";
-    let downloadLetter = "Letter's already submit.";
-    if (application.finalStatus === false) {
-      downloadLetter = `<div id="upload-container-${application.id}" style="display: flex; flex-direction: column; gap: 10px; padding: 8px; max-width: 220px;">
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        <label for="upload1-${application.id}" style="font-size: 0.8rem;">Offer Letter</label>
-        <input type="file" accept="image/*" id="upload1-${application.id}" class="form-control form-control-sm" />
-      </div>
+    let downloadOtherLetter = "Letter's already submit.";
+    let downloadOfferLetter = "Offer Letter's already submit.";
+    if (!application.finalStatus) {
+      downloadOtherLetter = `<div id="upload-container-${application.id}" style="display: flex; flex-direction: column; gap: 10px; padding: 8px; max-width: 220px;">
       <div style="display: flex; flex-direction: column; gap: 6px;">
         <label for="upload2-${application.id}" style="font-size: 0.8rem;">EMGS</label>
         <input type="file" accept="image/*" id="upload2-${application.id}" class="form-control form-control-sm" />
@@ -50,6 +73,15 @@ async function fetchApplicationStudent() {
         <input type="file" accept="image/*" id="upload3-${application.id}" class="form-control form-control-sm" />
       </div>
       <button class="submit-btn btn btn-sm btn-success mt-2" type="button" data-id="${application.id}" style="align-self: start; padding: 4px 12px;">Submit</button>
+    </div>`;
+    }
+    if (!application.OfferLetterStatus) {
+      downloadOfferLetter = `<div id="upload-container-${application.id}" style="display: flex; flex-direction: column; gap: 10px; padding: 8px; max-width: 220px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="upload2-${application.id}" style="font-size: 0.8rem;">Offer Letter</label>
+        <input type="file" accept=".zip" id="upload-zip-${application.id}" class="form-control form-control-sm" />
+      </div>
+      <button class="submit-uploadZip btn btn-sm btn-success mt-2" type="button" data-id="${application.id}" style="align-self: start; padding: 4px 12px;">Submit</button>
     </div>`;
     }
 
@@ -108,29 +140,64 @@ async function fetchApplicationStudent() {
   </td>
 
   <td class="align-middle" style="min-width: 220px;">
-    ${downloadLetter}
+    ${downloadOfferLetter}
   </td>
   <td class="align-middle" style="min-width: 220px;"> 
-    ${downloadLetter}
+    ${downloadOtherLetter}
   </td>
-  <td class="text-center align-middle" style="width: 90px;">
+  <td class="text-center align-middle" style="width: 140px; display: flex; flex-direction: column; gap: 4px;">
+
+  <div style="display: flex; align-items: center; gap: 6px; cursor: pointer;" title="Download Application Form PDF">
     <i class="material-symbols-rounded text-black download-icon full-pdf me-2" data-id="${
       application.id
     }" style="cursor:pointer;" title="Download Full PDF">download</i>
+    <span style="font-size: 0.75rem;">Application</span>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 6px; cursor: pointer;" title="View Attachment File">
     <i class="material-symbols-rounded text-black download-icon image-student" data-id="${
       application.id
-    }" style="cursor:pointer;" title="View Uploaded Images">image</i>
-  </td>
+    }">image</i>
+    <span style="font-size: 0.75rem;">Attachment</span>
+  </div>
+
+  ${
+    application.Passport_FPage
+      ? `
+    <div style="display: flex; align-items: center; gap: 6px; cursor: pointer;" title="Download Passport FPage">
+      <i class="material-symbols-rounded text-black download-icon passport-fpage" data-id="${application.id}">badge</i>
+      <span style="font-size: 0.75rem;">Passport</span>
+    </div>
+  `
+      : `
+    <div style="display: flex; align-items: center; gap: 6px; cursor: default; opacity: 0.5;" title="Passport not available">
+      <i class="material-symbols-rounded text-black download-icon" style="cursor: not-allowed;">badge</i>
+      <span style="font-size: 0.75rem;">Passport</span>
+    </div>
+  `
+  }
+
+</td>
 </tr>`;
 
     tbody.innerHTML += row;
   });
 
+  // Apply filter initially after rendering rows
+  filterApplications();
+
+  // Attach filter event listeners
+  document
+    .getElementById("statusFilter")
+    .addEventListener("change", filterApplications);
+  document
+    .getElementById("searchInput")
+    .addEventListener("input", filterApplications);
+
   // Event delegation on tbody for clicks and changes
   tbody.addEventListener("click", async (e) => {
     const target = e.target;
 
-    // Update remark button
     if (target.classList.contains("update-remark")) {
       const id = target.dataset.id;
       const input = document.querySelector(`.remark-input[data-id="${id}"]`);
@@ -150,14 +217,18 @@ async function fetchApplicationStudent() {
       return;
     }
 
-    // **File Upload Submit Button**
     if (target.classList.contains("submit-btn")) {
       const id = target.dataset.id;
-      await handleFileUpload(id); // Call upload function with student ID
+      await handleFileUpload(id);
       return;
     }
 
-    // Download full PDF
+    if (target.classList.contains("submit-uploadZip")) {
+      const id = target.dataset.id;
+      await uploadZip(id);
+      return;
+    }
+
     if (target.classList.contains("full-pdf")) {
       const id = target.dataset.id;
       const student = await getStudentDetails(id);
@@ -165,7 +236,6 @@ async function fetchApplicationStudent() {
       return;
     }
 
-    // View/download images PDF
     if (target.classList.contains("image-student")) {
       const id = target.dataset.id;
       const photo = await getImageDetail(id);
@@ -173,109 +243,34 @@ async function fetchApplicationStudent() {
       return;
     }
 
-    //download receipt
     if (target.classList.contains("image-receipt")) {
       const id = target.dataset.id;
       const photo = await getReceiptDetail(id);
       if (photo) generatePDFReceipt(photo);
       return;
     }
-  });
-  //handle filter for Pre_Processing
-  document
-    .getElementById("showPreProcessing")
-    .addEventListener("click", async () => {
-      const { data, error } = await window.supabase
-        .from("student_applications")
-        .select("id, register_by, full_name, status, remark, profile_photo")
-        .eq("status", "Pre_Processing");
-      if (error) {
-        console.error("Error fetching student applications:", error.message);
+
+    if (target.classList.contains("application-pdf")) {
+      const id = target.dataset.id;
+      await downloadApplicationFormPDF(id);
+      return;
+    }
+
+    if (target.classList.contains("passport-fpage")) {
+      const id = target.dataset.id;
+      if (!id) {
+        alert("Invalid application ID.");
         return;
       }
+      try {
+        await downloadPassportPDF(id);
+      } catch (error) {
+        console.error("Failed to download passport PDF:", error);
+        alert("Failed to download passport PDF.");
+      }
+    }
+  });
 
-      const tbody = document.querySelector("tbody");
-      tbody.innerHTML = "";
-
-      data.forEach((application, index) => {
-        const status = application.status ?? "new";
-        const remark = application.remark ?? "";
-
-        const row = `
-      <tr data-id="${application.id}">
-        <td class="text-sm text-center">${index + 1}</td>
-        <td><h6 class="mb-0 text-sm">${application.register_by}</h6></td>
-        <td><h6 class="mb-0 text-sm student-name" data-id="${application.id}">${
-          application.full_name
-        }</h6></td>
-        <td>
-          <select class="form-select form-select-sm text-xs status-select ${getStatusClass(
-            status
-          )}" data-id="${application.id}">
-            ${[
-              "New",
-              "Processing",
-              "Pre_approved",
-              "Pre_Processing",
-              "Approved",
-              "Rejected",
-            ]
-              .map(
-                (s) =>
-                  `<option value="${s}" ${
-                    status.toLowerCase() === s.toLowerCase() ? "selected" : ""
-                  }>${s.replace("_", " ")}</option>`
-              )
-              .join("")}
-          </select>
-        </td>
-        <td class="text-sm text-center">
-          <div class="d-flex align-items-left gap-2">
-            <input type="text" class="form-control form-control-sm remark-input" data-id="${
-              application.id
-            }" value="${remark}" placeholder="Enter remark"/>
-            <button class="btn btn-sm btn-warning update-remark" style="background-color: #28a745; align-items: center; justify-content: center; padding: 0.25rem 0.75rem; line-height: 1.25;" data-id="${
-              application.id
-            }">Update</button>
-          </div>
-        </td>
-        <td>
-        <div>
-        test
-        </div>
-        </td>
-        <td class="text-sm text-center">
-          <div class="upload-section d-flex flex-column gap-2 align-items-start">
-            <div class="file-group d-flex align-items-center gap-2 w-100">
-              <input type="file" class="form-control form-control-sm file-input" data-id="${
-                application.id
-              }" />
-              <span class="material-symbols-rounded text-success upload-file-icon" data-id="${
-                application.id
-              }" style="font-size: 24px; cursor: pointer;">upload</span>
-              <button class="btn btn-sm p-1 add-file-btn" data-id="${
-                application.id
-              }" title="Add File" style="border: none; background: transparent;">
-                <span class="material-symbols-rounded" style="font-size: 20px; color: #007bff; cursor: pointer;">add</span>
-              </button>
-            </div>
-          </div>
-        </td>
-        <td class="text-sm text-center">
-          <i class="material-symbols-rounded text-black download-icon full-pdf" data-id="${
-            application.id
-          }" style="cursor:pointer;">download</i>
-          <i class="material-symbols-rounded text-black download-icon image-student" data-id="${
-            application.id
-          }" style="cursor:pointer;">image</i>
-        </td>
-      </tr>`;
-
-        tbody.innerHTML += row;
-      });
-    });
-
-  // Handle status change event on tbody
   tbody.addEventListener("change", async (e) => {
     const target = e.target;
     if (target.classList.contains("status-select")) {
@@ -304,12 +299,15 @@ async function fetchApplicationStudent() {
         ];
         target.classList.remove(...allClasses);
         target.classList.add(...getStatusClass(newStatus).split(" "));
+
+        // Reapply filter to reflect any status change in filtering
+        filterApplications();
       }
     }
   });
 }
-
 function toBase64(file) {
+  console.log("hit");
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -319,18 +317,11 @@ function toBase64(file) {
 }
 
 async function handleFileUpload(studentId) {
-  let file1 = document.getElementById("upload1-" + studentId);
   let file2 = document.getElementById("upload2-" + studentId);
   let file3 = document.getElementById("upload3-" + studentId);
 
-  file1 = file1 ? file1.files[0] : null;
   file2 = file2 ? file2.files[0] : null;
   file3 = file3 ? file3.files[0] : null;
-
-  let offer_letter_url1 = "";
-  if (file1) {
-    offer_letter_url1 = await toBase64(file1);
-  }
 
   let emgs_url2 = "";
   if (file2) {
@@ -345,7 +336,6 @@ async function handleFileUpload(studentId) {
   const { error } = await window.supabase
     .from("student_applications")
     .update({
-      offer_letter_url: offer_letter_url1,
       emgs_url: emgs_url2,
       eval_url: eval_url3,
       finalStatus: true,
@@ -361,6 +351,36 @@ async function handleFileUpload(studentId) {
   }
 
   return;
+}
+
+async function uploadZip(studentId) {
+  const fileInput = document.getElementById("upload-zip-" + studentId);
+  const file = fileInput.files[0];
+  if (!file) return alert("Please select a ZIP file");
+
+  const reader = new FileReader();
+
+  reader.onload = async function (event) {
+    const base64String = event.target.result.split(",")[1]; // remove prefix
+
+    const { data, error } = await window.supabase
+      .from("student_applications") // change to your table name
+      .update({
+        offer_letter_url: base64String,
+        OfferLetterStatus: true,
+      })
+      .eq("id", studentId);
+
+    if (error) {
+      console.error("Upload error:", error);
+      alert("Upload failed");
+    } else {
+      alert("File uploaded successfully");
+      location.reload();
+    }
+  };
+
+  reader.readAsDataURL(file); // this will give base64 with MIME prefix
 }
 
 async function getReceiptDetail(studentId) {
@@ -379,26 +399,59 @@ async function getReceiptDetail(studentId) {
 }
 
 async function getStudentDetails(studentId) {
-  const { data, error } = await window.supabase
-    .from("student_applications")
-    .select("offer_letter_url, emgs_url, eval_url")
-    .eq("id", studentId)
-    .single();
+  try {
+    if (!studentId) {
+      alert("Invalid student ID");
+      return null;
+    }
 
-  if (error) {
-    console.error("Error fetching student details:", error.message);
-    alert("\u274C Error fetching student details.");
+    console.log("Fetching student details for ID:", studentId);
+
+    const { data, error } = await window.supabase
+      .from("student_applications")
+      .select(
+        `
+        full_name, gender, date_of_birth, nationality, nonMalaysianInput,
+        race, religion, ic_or_passport, email, birth_place, contact_number,
+        emergency_contact_name, emergency_contact_number,
+        permanent_address, permanent_postcode, permanent_city, permanent_state,
+        program_status, program_name, study_mode, intake_year, intake_semester,
+        highest_qualification, institution_name, institution_country, year_gradschool, graduation_year,
+        secondary_name, secondary_address, secondary_qualification,
+        english_test, english_test_date, english_score, english_test_other,
+        require_visa, visa_type, passport_expiry, specifycondition, specifycurrent, current_medication, medicalConditions, father_name, father_occupation, father_phone, mother_name, mother_occupation, mother_phone, declaration_date, declaration_signature, declaration_checked, 
+        offer_letter_url, emgs_url, eval_url
+      `
+      )
+      .eq("id", studentId)
+      .single();
+
+    if (error) {
+      console.error("❌ Supabase error fetching student details:", error);
+      alert("Error fetching student details.");
+      return null;
+    }
+
+    if (!data) {
+      alert("No student found with the given ID.");
+      return null;
+    }
+
+    console.log("Fetched student details:", data);
+    return data;
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    alert("Unexpected error fetching student details.");
     return null;
   }
-
-  return data;
 }
+
 //DOWNLOAD FILE
 async function getImageDetail(studentId) {
   const { data, error } = await window.supabase
     .from("student_applications")
     .select(
-      "profile_photo, ResultQualification, english_result_file, Passport_FPage, payment_receipt_file, graduatesecondry, Cert_sec_stud, Healthdeclare_file, Certificate_completion_studies, Certificate_completion_studies_file"
+      "profile_photo, ResultQualification, Certificate_completion_studies_file, chsi, cscse, english_result_file, payment_receipt_file, graduatesecondry, Cert_sec_stud, Healthdeclare_file"
     )
     .eq("id", studentId)
     .single();
@@ -410,11 +463,57 @@ async function getImageDetail(studentId) {
   }
   return data;
 }
-//STUDENT APPLICATION DOWNLOAD PDF
+//DOWNLOAD PASSPORT
+async function downloadPassportPDF(studentId) {
+  try {
+    const { data, error } = await window.supabase
+      .from("student_applications")
+      .select("Passport_FPage")
+      .eq("id", studentId)
+      .single();
+
+    if (error) throw error;
+
+    if (!data || !data.Passport_FPage) {
+      alert("No passport file found for this student.");
+      return;
+    }
+
+    // If data URL already includes prefix (data:application/pdf;base64,...), we can use it directly
+    let base64String = data.Passport_FPage;
+
+    // Remove any "data:*/*;base64," prefix to standardize
+    if (base64String.startsWith("data:")) {
+      base64String = base64String.split(",")[1];
+    }
+
+    downloadBase64File(base64String, `Passport_${studentId}.pdf`);
+  } catch (err) {
+    console.error("❌ Failed to download Passport PDF:", err);
+    alert(
+      "Failed to download passport. Check if the file exists and is in correct format."
+    );
+  }
+}
+function downloadBase64File(base64String, fileName) {
+  const link = document.createElement("a");
+  link.href = `data:application/pdf;base64,${base64String}`;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 function generatePDF(student) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  doc.text(`Student Application Details of UniMAP@KL`, 14, 15);
+
+  const safe = (val) => val || "-";
+  const formatDate = (val) =>
+    val ? new Date(val).toLocaleDateString("en-GB") : "-";
+
+  doc.setFontSize(14);
+  doc.text("STUDENT APPLICATION DETAILS OF UNIMAP@KL", 14, 15);
+  doc.setFontSize(10);
 
   doc.autoTable({
     startY: 25,
@@ -423,25 +522,25 @@ function generatePDF(student) {
       [
         {
           content: "PERSONAL INFORMATION",
-          rowSpan: 10,
+          rowSpan: 11,
           styles: { fontStyle: "bold" },
         },
         "Full Name",
-        student.full_name,
+        safe(student.full_name),
       ],
-      ["Gender", student.gender],
-      ["Date of Birth", student.date_of_birth],
+      ["Gender", safe(student.gender)],
+      ["Date of Birth", formatDate(student.date_of_birth)],
       [
         "Nationality",
         student.nationality === "noncitizen" ? "Non-Malaysian" : "Malaysian",
-        student.non_malaysian_specify || "-",
       ],
-      ["Race", student.race],
-      ["Religion", student.religion],
-      ["Ic/ Passport No.", student.ic_or_passport],
-      ["Email", student.email],
-      ["Place of Birth", student.birth_place],
-      ["Contact Number", student.contact_number],
+      ["Specify Nationality", safe(student.nonMalaysianInput)],
+      ["Race", safe(student.race)],
+      ["Religion", safe(student.religion)],
+      ["IC/Passport No.", safe(student.ic_or_passport)],
+      ["Email", safe(student.email)],
+      ["Place of Birth", safe(student.birth_place)],
+      ["Contact Number", safe(student.contact_number)],
 
       [
         {
@@ -450,9 +549,9 @@ function generatePDF(student) {
           styles: { fontStyle: "bold" },
         },
         "Emergency Contact",
-        `${student.emergency_contact_name || ""}, ${
-          student.emergency_contact_number || ""
-        }`,
+        `${safe(student.emergency_contact_name)}, ${safe(
+          student.emergency_contact_number
+        )}`,
       ],
 
       [
@@ -462,7 +561,9 @@ function generatePDF(student) {
           styles: { fontStyle: "bold" },
         },
         "Address",
-        `${student.permanent_address}, ${student.permanent_postcode}, ${student.permanent_city}, ${student.permanent_state}`,
+        `${safe(student.permanent_address)}, ${safe(
+          student.permanent_postcode
+        )}, ${safe(student.permanent_city)}, ${safe(student.permanent_state)}`,
       ],
 
       [
@@ -472,12 +573,12 @@ function generatePDF(student) {
           styles: { fontStyle: "bold" },
         },
         "Program Level",
-        student.program_status,
+        safe(student.program_status),
       ],
-      ["Program Name", student.program_name],
-      ["Mode of Study", student.study_mode],
-      ["Intake Year", student.intake_year],
-      ["Semester", student.intake_semester],
+      ["Program Name", safe(student.program_name)],
+      ["Mode of Study", safe(student.study_mode)],
+      ["Intake Year", safe(student.intake_year)],
+      ["Semester", safe(student.intake_semester)],
 
       [
         {
@@ -486,11 +587,11 @@ function generatePDF(student) {
           styles: { fontStyle: "bold" },
         },
         "Highest Qualification Obtained",
-        student.highest_qualification,
+        safe(student.highest_qualification),
       ],
-      ["Institution Name", student.institution_name],
-      ["Country of Institution", student.institution_country],
-      ["Year of Graduation", student.graduation_year],
+      ["Institution Name", safe(student.institution_name)],
+      ["Country of Institution", safe(student.institution_country)],
+      ["Year of Graduation", safe(student.graduation_year)],
 
       [
         {
@@ -499,10 +600,10 @@ function generatePDF(student) {
           styles: { fontStyle: "bold" },
         },
         "Secondary School Name",
-        student.secondary_name,
+        safe(student.secondary_name),
       ],
-      ["Address", student.secondary_address],
-      ["Qualifications Obtained", student.secondary_qualification],
+      ["Address", safe(student.secondary_address)],
+      ["Qualifications Obtained", safe(student.secondary_qualification)],
 
       [
         {
@@ -511,23 +612,22 @@ function generatePDF(student) {
           styles: { fontStyle: "bold" },
         },
         "Type of English Test Taken",
-        student.english_test,
+        safe(student.english_test),
       ],
-      ["Others English Specify", student.english_test_date],
-      ["Test Date", student.english_score],
+      ["Test Date", formatDate(student.english_test_date)],
+      ["Score", safe(student.english_score)],
 
       [
         {
           content: "VISA INFORMATION",
-          rowSpan: 4,
+          rowSpan: 3,
           styles: { fontStyle: "bold" },
         },
         "Require Student Visa?",
-        student.require_visa,
+        safe(student.require_visa),
       ],
-      ["Type of Visa", student.visa_type],
-      ["Visa Expiry Date", student.visa_expiry],
-      ["Passport Expiry Date", student.passport_expiry],
+      ["Type of Visa", safe(student.visa_type)],
+      ["Passport Expiry Date", formatDate(student.passport_expiry)],
 
       [
         {
@@ -536,11 +636,14 @@ function generatePDF(student) {
           styles: { fontStyle: "bold" },
         },
         "Any known medical conditions?",
-        student.known_medical_conditions,
+        safe(student.medicalConditions),
       ],
-      ["If Yes, Specify", student.specifycondition],
-      ["Currently on any regular medication?", student.on_medication],
-      ["If Yes, Specify", student.specifycurrent],
+      ["If Yes, Specify", safe(student.specifycondition)],
+      [
+        "Currently on any regular medication?",
+        safe(student.current_medication),
+      ],
+      ["If Yes, Specify", safe(student.specifycurrent)],
 
       [
         {
@@ -549,24 +652,29 @@ function generatePDF(student) {
           styles: { fontStyle: "bold" },
         },
         "Father's/Guardian's Name",
-        student.father_name,
+        safe(student.father_name),
       ],
-      ["Father's/Guardian's Contact", student.father_phone],
-      ["Father's/Guardian's Occupation", student.father_occupation],
-      ["Mother's/Guardian's Name", student.mother_name],
-      ["Mother's/Guardian's Contact", student.mother_phone],
-      ["Mother's/Guardian's Occupation", student.mother_occupation],
+      ["Father's/Guardian's Contact", safe(student.father_phone)],
+      ["Father's/Guardian's Occupation", safe(student.father_occupation)],
+      ["Mother's/Guardian's Name", safe(student.mother_name)],
+      ["Mother's/Guardian's Contact", safe(student.mother_phone)],
+      ["Mother's/Guardian's Occupation", safe(student.mother_occupation)],
 
       [
         { content: "DECLARATION", rowSpan: 4, styles: { fontStyle: "bold" } },
         "Declaration",
-        "Yes, I declare that the information provided is accurate.",
+        "I declare that the information provided is accurate.",
       ],
-      ["Signature of Student", student.declaration_signature],
-      ["Date", student.declaration_date],
-      ["Parent Declaration", student.parent_declaration_date],
+      ["Declare: Yes", safe(student.declaration_checked ? "Yes" : "No")],
+      ["Signature of Student", safe(student.declaration_signature)],
+      ["Declaration Date", formatDate(student.declaration_date)],
     ],
-    styles: { fontSize: 10 },
+    styles: { fontSize: 10, cellWidth: "wrap" },
+    columnStyles: {
+      0: { cellWidth: 50 },
+      1: { cellWidth: 50 },
+      2: { cellWidth: 90 },
+    },
     headStyles: {
       fillColor: [0, 51, 102],
       textColor: [255, 255, 255],
@@ -575,7 +683,7 @@ function generatePDF(student) {
     theme: "grid",
   });
 
-  doc.save(`${student.full_name}_Application.pdf`);
+  doc.save(`${safe(student.full_name).replace(/\s+/g, "_")}_Application.pdf`);
 }
 
 function generatePDFimg(photo) {
@@ -583,19 +691,20 @@ function generatePDFimg(photo) {
   const doc = new jsPDF();
 
   const imageFields = [
-    { key: "profile_photo", label: "Profile Photo" },
-    { key: "ResultQualification", label: "Qualification Result" },
+    { key: "profile_photo", label: "Passport Photo" },
+    { key: "ResultQualification", label: "Academic Transcript" },
+    {
+      key: "Certificate_completion_studies_file",
+      label: "Academic Graduation Results",
+    },
     { key: "english_result_file", label: "English Result" },
-    { key: "Passport_FPage", label: "Passport Front Page" },
+    { key: "chsi", label: "CHSI" },
+    { key: "cscse", label: "CSCSE" },
+    // { key: "Passport_FPage", label: "Passport Front Page" },
     { key: "payment_receipt_file", label: "Payment Receipt" },
     { key: "graduatesecondry", label: "Graduate Secondary Cert" },
     { key: "Cert_sec_stud", label: "Certificate of Secondary Studies" },
     { key: "Healthdeclare_file", label: "Health Declaration" },
-    {
-      key: "Certificate_completion_studies",
-      label: "Certificate of Completion",
-    },
-    { key: "Certificate_completion_studies_file", label: "Completion File" },
   ];
 
   const pageWidth = doc.internal.pageSize.getWidth();

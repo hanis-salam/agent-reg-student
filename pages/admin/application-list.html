@@ -17,20 +17,17 @@
       href="../../assets/img/UPDATE 2025 LOGO UniMAP only-01.png"
     />
     <title>UniMAP@KL</title>
-    <!--     Fonts and icons     -->
     <link
       rel="stylesheet"
       type="text/css"
       href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900"
     />
-    <!-- Nucleo Icons -->
     <link href="../../assets/css/nucleo-icons.css" rel="stylesheet" />
     <link href="../../assets/css/nucleo-svg.css" rel="stylesheet" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
     />
-    <!-- CSS Files -->
     <link
       id="pagestyle"
       href="../../assets/css/material-dashboard.css?v=3.2.0"
@@ -49,29 +46,29 @@
 
       .download-icon {
         font-size: 20px;
-        margin: 0 4px;
+        margin: 0 6px;
+        cursor: pointer;
       }
+
       table {
         width: 100%;
         border-collapse: collapse;
         font-family: Arial, sans-serif;
         font-size: 0.85rem;
       }
+
       th,
       td {
         padding: 6px 8px;
         vertical-align: top;
+        white-space: normal !important;
+        overflow-wrap: break-word !important;
       }
+
       textarea:focus,
       select:focus,
       input[type="file"]:focus {
         outline: 1px solid #4027ff;
-      }
-
-      .download-icon {
-        font-size: 20px;
-        margin: 0 6px;
-        cursor: pointer;
       }
 
       #upload-container-[id] {
@@ -91,7 +88,6 @@
         line-height: 1.2;
       }
 
-      /* New styles to fix table width and prevent horizontal scroll */
       .table-responsive {
         overflow-x: hidden !important;
       }
@@ -102,13 +98,6 @@
         word-wrap: break-word;
       }
 
-      th,
-      td {
-        white-space: normal !important;
-        overflow-wrap: break-word !important;
-      }
-
-      /* Limit width on some columns to avoid very wide cells */
       th:nth-child(2),
       td:nth-child(2),
       th:nth-child(4),
@@ -120,25 +109,29 @@
         max-width: 180px !important;
       }
 
-      /* Prevent table header text wrapping */
       thead th {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        vertical-align: middle; /* keep vertical center */
-        thead th,
-        tbody td {
-          text-align: center;
-          vertical-align: middle;
-        }
+        vertical-align: middle;
+        text-align: center;
+      }
 
-        .table-striped > tbody > tr:nth-of-type(odd) {
-          background-color: #f9f9f9;
-        }
+      tbody td {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+      }
+
+      #statusFilter {
+        color: white;
+        background-color: black;
       }
     </style>
   </head>
-
   <body class="g-sidenav-show bg-gray-100">
     <aside
       class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2"
@@ -172,7 +165,6 @@
               <span class="nav-link-text ms-1">Dashboard</span>
             </a>
           </li>
-
           <li class="nav-item mt-3">
             <h6
               class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5"
@@ -229,11 +221,9 @@
         </div>
       </div>
     </aside>
-
     <main
       class="main-content position-relative max-height-vh-100 h-100 border-radius-lg"
     >
-      <!-- Navbar -->
       <nav
         class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl"
         id="navbarBlur"
@@ -257,61 +247,62 @@
           </nav>
         </div>
       </nav>
-
-              <h6 class="mb-0 text-Black">STUDENT APPLICATION SUMMARY</h6>
-            </div>
-            <!-- content -->
-            <div class="row mb-4">
-              <div id="content" class="col-12">
-                <div class="card shadow-sm">
-                  <div
-                    class="card-header bg-dark text-white d-flex justify-content-between align-items-center"
-                  >
-                    <h6 class="mb-0">Student Application Summary</h6>
-                    <button
-                      type="button"
-                      class="btn btn-info btn-sm"
-                      id="showPreProcessing"
-                    >
-                      Show Pre-Processing
-                    </button>
-                  </div>
-
-                  <div class="table-responsive">
-                    <table
-                      class="table table-bordered table-hover table-striped"
-                    >
-                      <thead class="thead-light text-center">
-                        <tr>
-                          <th style="width: 40px">No.</th>
-                          <th style="width: 160px">Student</th>
-                          <th style="width: 160px">Status</th>
-                          <th style="min-width: 250px">Remarks</th>
-                          <th style="width: 100px">Proof Receipt</th>
-                          <th style="min-width: 130px">Offer Letter</th>
-                          <th style="min-width: 130px">EMGS & EVAL</th>
-                          <th style="width: 130px">Application File</th>
-                        </tr>
-                      </thead>
-                      <tbody id="applicationTableBody">
-                        <!-- Table rows dynamically added here -->
-                      </tbody>
-                    </table>
-                  </div>
+      <div class="container-fluid py-4">
+        <h6 class="mb-0 text-black">STUDENT APPLICATION SUMMARY</h6>
+        <div class="row mb-4">
+          <div id="content" class="col-12">
+            <div class="card shadow-sm">
+              <div
+                class="card-header bg-dark text-white d-flex justify-content-between align-items-center"
+              >
+                <h6 class="mb-0">Student Application Summary</h6>
+                <div class="d-flex gap-2">
+                  <select id="statusFilter" class="form-select form-select-sm">
+                    <option value="All">All Statuses</option>
+                    <option value="New">New</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Pre_approved">Pre approved</option>
+                    <option value="Pre_Processing">Pre Processing</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                  <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control form-control-sm"
+                    placeholder="Search student name"
+                  />
                 </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                  <thead class="thead-light text-center">
+                    <tr>
+                      <th style="width: 80px">No.</th>
+                      <th style="width: 160px">Student</th>
+                      <th style="width: 160px">Status</th>
+                      <th style="min-width: 250px">Remarks</th>
+                      <th style="width: 100px">Proof Receipt</th>
+                      <th style="min-width: 130px">Offer Letter</th>
+                      <th style="min-width: 130px">EMGS & EVAL</th>
+                      <th style="width: 130px">Application File</th>
+                    </tr>
+                  </thead>
+                  <tbody id="applicationTableBody">
+                    <!-- Table rows dynamically added here -->
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
       </div>
     </main>
-
     <script src="../../assets/js/core/popper.min.js"></script>
     <script src="../../assets/js/core/bootstrap.min.js"></script>
     <script src="../../assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="../../assets/js/plugins/smooth-scrollbar.min.js"></script>
     <script src="../../assets/js/plugins/chartjs.min.js"></script>
-    <!-- Load jsPDF and AutoTable plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
@@ -319,10 +310,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-
-    <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../../assets/js/material-dashboard.min.js?v=3.2.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="../../assets/js/db/connection.js"></script>
